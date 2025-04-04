@@ -2,7 +2,8 @@
 
 ![](KIP.png)
 
-
+> [!NOTE]
+> 각 기술 스택을 직접 사용해보며 공부하는 toy project입니다.
 
 ## 개발 환경
 
@@ -15,8 +16,7 @@
 - MySQLDB
 - Redis
 - Docker & k8s
-- MariaDB 
-- Jenkins 
+- Jenkins
 - Apache Kafka
 - RabbitMQ
 - AWS
