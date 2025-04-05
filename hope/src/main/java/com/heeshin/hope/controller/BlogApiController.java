@@ -2,14 +2,14 @@ package com.heeshin.hope.controller;
 
 import com.heeshin.hope.domain.Article;
 import com.heeshin.hope.dto.AddArticleRequest;
+import com.heeshin.hope.dto.ArticleResponse;
 import com.heeshin.hope.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,5 +22,15 @@ public class BlogApiController {
     public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request) {
         Article article = blogService.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(article);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ArticleResponse>> findAllArticles() {
+        // List<Article>를 받아 List<ArticleResponse>로 변환
+        List<ArticleResponse> articles = blogService.findAll()
+                .stream()
+                .map(ArticleResponse::new).toList();
+
+        return ResponseEntity.ok().body(articles);
     }
 }

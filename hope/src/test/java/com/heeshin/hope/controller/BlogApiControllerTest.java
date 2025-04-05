@@ -20,7 +20,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -47,7 +49,7 @@ class BlogApiControllerTest {
 
     @DisplayName("addArticle: 블로그 글 추가")
     @Test
-    public void addArticle() throws Exception {
+    void addArticle() throws Exception {
         // given
         String url = "/api/articles";
         String title = "Test Title";
@@ -69,5 +71,28 @@ class BlogApiControllerTest {
         assertThat(articles.size()).isEqualTo(1);
         assertThat(articles.get(0).getTitle()).isEqualTo(title);
         assertThat(articles.get(0).getContent()).isEqualTo(content);
+    }
+
+    @DisplayName("findAllArticles: 블로그 글 모두 조회")
+    @Test
+    void findAllArticles() throws Exception {
+        final String url = "/api/articles";
+        final String title = "Test Title";
+        final String content = "Test Content";
+
+        blogRepository.save(Article.builder()
+                .title(title)
+                .content(content)
+                .build());
+
+        // when
+        ResultActions result = mockMvc.perform(get(url)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value(title))
+                .andExpect(jsonPath("$[0].content").value(content));
     }
 }
