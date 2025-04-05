@@ -7,6 +7,15 @@
 
 HOPE는 인터넷에 널리 퍼져있는 여러 개발 지식을 모아놓은 플랫폼입니다. 다양한 기술들을 직접 사용해보며 공부도 같이 할 수 있는 웹 어플리케이션을 제작해봅니다.
 
+## 요구 사항 분석
+
+- 인증/인가
+    - 로그인 (회원 등록/삭제/수정)
+    - Oauth (google login)
+- 게시글
+    - 게시글 등록/삭제/검색/수정
+    - File I/O
+
 ## 개발 환경
 
 ### Back-end
@@ -26,3 +35,12 @@ HOPE는 인터넷에 널리 퍼져있는 여러 개발 지식을 모아놓은 �
 ### Front-end
 
 - React:19.0.0
+
+## API Reference
+
+### Endpoints
+
+`GET /api/health`
+
+## Troubleshooting
+

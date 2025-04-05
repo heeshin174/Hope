@@ -9,5 +9,4 @@ class HopeApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+#    data:
+#        mongodb:
+#        uri: mongodb://localhost:27017/your_mongo_database_name
+#        database: your_mongo_database_name
+#    redis:
+#        host: localhost
+#        port: 6379
+#        password: your_redis_password
