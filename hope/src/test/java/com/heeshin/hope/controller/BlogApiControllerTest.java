@@ -18,10 +18,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -94,5 +92,43 @@ class BlogApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].title").value(title))
                 .andExpect(jsonPath("$[0].content").value(content));
+    }
+
+    @DisplayName("findArticle: 블로그 글 하나 조회")
+    @Test
+    public void findArticle() throws Exception {
+        // given
+        final String url = "/api/articles/{id}";
+
+        String title = "Test Title";
+        String content = "Test Content";
+        Article article = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content).build());
+
+        // when
+        ResultActions result = mockMvc.perform(get(url, article.getId()));
+        // then
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(title))
+                .andExpect(jsonPath("$.content").value(content));
+    }
+
+    @DisplayName("deleteArticle: 블로그 글 삭제")
+    @Test
+    void deleteArticle() throws Exception {
+
+        String url = "/api/articles/{id}";
+        String title = "Test Title";
+        String content = "Test Content";
+        Article article = blogRepository.save(Article.builder()
+                .title(title)
+                .content(content).build());
+
+        ResultActions result = mockMvc.perform(delete(url, article.getId()));
+
+        result.andExpect(status().isOk());
+        List<Article> articles = blogRepository.findAll();
+        assertThat(articles.size()).isEqualTo(0);
     }
 }
