@@ -6,6 +6,7 @@ import TopItem from 'components/TopItem'
 import CommentItem from 'components/CommentItem'
 import FavoriteItem from 'components/FavoriteItem'
 import InputBox from 'components/InputBox'
+import Footer from 'layouts/Footer'
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
     {favoriteListMock.map((favoriteListItem) => 
       <FavoriteItem favoriteListItem={favoriteListItem} />
     )}
+    <Footer />
     </>
   )
 }

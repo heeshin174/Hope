@@ -1,0 +1,51 @@
+#footer {
+    background-color: rgba(55,55,55,1);
+    padding: 40px 40px 50px 40px;
+    display: flex;
+    min-width: 1200px;
+}
+
+.footer-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-logo-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-logo-text {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 140%;
+    color: rgba(255,255,255,1);
+    letter-spacing: -0.4px;
+}
+
+.footer-link-box {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.footer-email-link {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,1);
+}
+
+.footer-copyright-box {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,1);
+}
