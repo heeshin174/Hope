@@ -1,8 +1,9 @@
 import BoardItem from './components/BoardItem'
 import './App.css'
-import { commentListMock, latestBoardListMock, topBoardListMock } from './mocks'
+import { commentListMock, favoriteListMock, latestBoardListMock, topBoardListMock } from './mocks'
 import TopItem from 'components/TopItem'
 import CommentItem from 'components/CommentItem'
+import FavoriteItem from 'components/FavoriteItem'
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
     )}
     {commentListMock.map((commentListItem) =>
       <CommentItem commentListItem={commentListItem} />
+    )}
+    {favoriteListMock.map((favoriteListItem) => 
+      <FavoriteItem favoriteListItem={favoriteListItem} />
     )}
     </>
   )

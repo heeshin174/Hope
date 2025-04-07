@@ -1,0 +1,22 @@
+import { FavoriteListItem } from "types/interface";
+import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
+import './style.css';
+
+interface Props {
+    favoriteListItem: FavoriteListItem;
+}
+
+export default function FavoriteItem({favoriteListItem}: Props) {
+    
+    // properties
+    const { nickname, profileImage } = favoriteListItem;
+    
+    return (
+        <div className="favorite-list-item">
+            <div className="favorite-list-item-profile-box">
+                <div className="favorite-list-item-profile-image" style={{ backgroundImage: `url(${profileImage ? profileImage : defaultProfileImage})`}}></div>
+            </div>
+            <div className="favorite-list-item-nickname">{nickname}</div>
+        </div>
+    );
+}
