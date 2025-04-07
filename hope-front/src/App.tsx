@@ -1,7 +1,8 @@
 import BoardItem from './components/BoardItem'
 import './App.css'
-import { latestBoardListMock, topBoardListMock } from './mocks'
+import { commentListMock, latestBoardListMock, topBoardListMock } from './mocks'
 import TopItem from 'components/TopItem'
+import CommentItem from 'components/CommentItem'
 
 function App() {
   return (
@@ -13,6 +14,9 @@ function App() {
     </div>
     {latestBoardListMock.map((boardListItem) => 
       <BoardItem boardListItem={boardListItem} />
+    )}
+    {commentListMock.map((commentListItem) =>
+      <CommentItem commentListItem={commentListItem} />
     )}
     </>
   )
