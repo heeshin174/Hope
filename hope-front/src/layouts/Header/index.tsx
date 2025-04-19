@@ -1,18 +1,28 @@
 import { ChangeEvent, useRef, useState, KeyboardEvent, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import './style.css'
-import { AUTH_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
+import { AUTH_PATH, BOARD_DETAIL_PATH, BOARD_PATH, BOARD_UPDATE_PATH, BOARD_WRITE_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import { useCookies } from 'react-cookie';
-import { useLoginUserStore } from 'stores';
+import { useBoardStore, useLoginUserStore } from 'stores';
 
 export default function Header() {
 	// state: 로그인 유저 상태
 	const { loginUser, setLoginUser, resetLoginUser } = useLoginUserStore();
+	// state: path 상태
+	const { pathname } = useLocation();
+
 	// state: cookie 상태
 	const [cookies, setCookies] = useCookies();
 	// state: login 상태
 	const [isLogin, setLogin] = useState<boolean>(true);
 
+	const isAuthPage = pathname.startsWith(AUTH_PATH());
+	const isMainPage = pathname === MAIN_PATH();
+	const isSearchPage = pathname.startsWith(SEARCH_PATH(''));
+	const isBoardDetailPage = pathname.startsWith(BOARD_PATH() + '/' + BOARD_DETAIL_PATH(''));
+	const isBoardWritePage = pathname.startsWith(BOARD_PATH() + '/' + BOARD_WRITE_PATH());
+	const isBoardUpdatePage = pathname.startsWith(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(''));
+	const isUserPage = pathname.startsWith(USER_PATH(''));
 
 	const navigate = useNavigate();
 
@@ -90,6 +100,21 @@ export default function Header() {
 		return <div className="black-button" onClick={onSignInButtonClickHandler}>{'login'}</div>
 	}
 
+	// component: upload button
+	const UploadButton = () => {
+		// state: 게시물 상태
+		const { title, content, boardImageFileList, resetBoard } = useBoardStore();
+
+		// event handler: 업로드 버튼 클릭 이벤트 처리 함수
+		const onUploadButtonClickHandler = () => {
+
+		}
+		if (title && content)
+			return <div className="black-button" onClick={onUploadButtonClickHandler}>{'Upload'}</div>
+		return <div className="disable-button">{'Upload'}</div>
+	}
+
+
 	return (
 		<div id="header">
 			<div className="header-container">
@@ -100,8 +125,9 @@ export default function Header() {
 					<div className="header-logo">{"HOPE"}</div>
 				</div>
 				<div className="header-right-box">
-					<SearchButton />
-					<MyPageButton />
+					{(isAuthPage || isMainPage || isSearchPage || isBoardDetailPage) && <SearchButton />}
+					{(isMainPage || isSearchPage || isBoardDetailPage || isUserPage) && <MyPageButton />}
+					{(isBoardWritePage || isBoardUpdatePage) && <UploadButton />}
 				</div>
 			</div>
 		</div>
