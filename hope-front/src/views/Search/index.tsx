@@ -1,4 +1,6 @@
-export default function index() {
+import './style.css'
+
+export default function Search() {
 	return (
 		<div>index</div>
 	)
