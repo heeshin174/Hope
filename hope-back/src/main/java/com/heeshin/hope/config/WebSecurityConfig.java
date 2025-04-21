@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())
                 )
                 .csrf(CsrfConfigurer::disable)
-                .httpBasic(HttpBasicConfigurer::disable) // 기본 인증 비활성화 (들어가자 마자 로그인 창)
+                .httpBasic(HttpBasicConfigurer::disable) // 기본 인증 비활성화 (들어가자 마자 로그인 창이 안뜨도록)
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // session 기반 인증 사용 안함
                 )

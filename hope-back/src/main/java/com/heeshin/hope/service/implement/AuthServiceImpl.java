@@ -2,8 +2,11 @@ package com.heeshin.hope.service.implement;
 
 import com.heeshin.hope.domain.UserEntity;
 import com.heeshin.hope.dto.ResponseDto;
+import com.heeshin.hope.dto.request.auth.SignInRequestDto;
 import com.heeshin.hope.dto.request.auth.SignUpRequestDto;
+import com.heeshin.hope.dto.response.auth.SignInResponseDto;
 import com.heeshin.hope.dto.response.auth.SignUpResponseDto;
+import com.heeshin.hope.provider.JwtProvider;
 import com.heeshin.hope.repository.UserRepository;
 import com.heeshin.hope.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +21,9 @@ public class AuthServiceImpl implements AuthService {
 
     // 의존성 주입
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
+    // 객체 생성
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -48,5 +53,27 @@ public class AuthServiceImpl implements AuthService {
             return ResponseDto.databaseError();
         }
         return SignUpResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto) {
+        String token = null;
+        try {
+            String email = dto.getEmail();
+            UserEntity userEntity = userRepository.findByEmail(email);
+            if (userEntity == null) return SignInResponseDto.signInFailed();
+
+            String password = dto.getPassword();
+            String encodedPassword = userEntity.getPassword();
+            boolean isMatched = passwordEncoder.matches(password, encodedPassword);
+            if (!isMatched) return SignInResponseDto.signInFailed();
+
+            token = jwtProvider.create(email);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return SignInResponseDto.success(token);
     }
 }

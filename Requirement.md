@@ -7,8 +7,29 @@
     - 게시글 등록/삭제/검색/수정
     - File I/O
 
-## API Reference
+## API
 
 ### Endpoints
 
-`GET /api/health`
+`POST /api/v1/auth/sign-up`
+
+```
+{
+  "email": "email@email.com",
+  "password": "sadaf3#fa",
+  "nickname": "nickname3213",
+  "telNumber": "01012345678",
+  "address": "부산광역시 부산진구",
+  "addressDetail": "하이몰",
+  "agreedPersonal": true
+}
+```
+
+`POST /api/v1/auth/sign-in`
+
+```
+{
+  "email": "email@email.com",
+  "password": "sadaf3#fa",
+}
+```

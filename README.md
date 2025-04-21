@@ -60,9 +60,21 @@ See details at [Troubleshooting](./Trobleshooting.md)
 
 이 모든 건 AI 생성 또는 본인이 직접 생성 중 택 1
 
-1. 퀴즈를 글 시작에 제공 
+1. h1, h2, h3, h4 등 제목 선택
+2. 퀴즈를 글 시작과 끝에 제공
+  - 이 글에서 무엇을 배우는 지
   - 직접 질문에 답하며 피드백 받음
-2. 글 중간 중간에 빈칸 (highlight, bold text, colored text, ...)을 껐다 켤 수 있는 기능을 제공
-3. 이미지 역시 text와 섞인 이미지면 텍스트 숨기기 기능 제공
-4. 이 내용으로 무엇을 할 수 있는 지 실습 내용 제공
+3. 모든 내용마다 "flashcard", "Cloze", "Image Occlusion" 중 택 1
+  - flashcard: Quiz / Answer
+  - Cloze: highlight / Bold 한 부분 가리기
+    - 글 중간 중간에 빈칸 (highlight, bold text, colored text, ...)을 껐다 켤 수 있는 기능을 제공
+  - Image Occlusion: Image 중 특정 부분 가리기
+    - Image DND (Drag and Drop) 제공
+  - Jupyter Notebook 처럼 매 문단마다 셋 중 하나 선택가능
+  - 다른 format에도 볼 수 있게 pdf 파일 다운 제공
+4. 이 내용으로 무엇을 할 수 있는 지 실습 내용 제공 (실습 part면)
+
+- 공간 변화: 모바일 웹에서 이동하면서 볼 수 있음
+- 시간 변화: 본인의 이해도를 easy, normal, hard를 선택하여 시간이 지나면 재시험 강요
+
 
