@@ -38,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
 
             String password = dto.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
+            dto.setPassword(encodedPassword);
 
             UserEntity userEntity = new UserEntity(dto);
             userRepository.save(userEntity);

@@ -26,8 +26,8 @@ public class SignUpRequestDto {
 
     private String addressDetail;
 
-    // true인 상태만 받
+    // true인 상태만 받기
     @NotNull @AssertTrue
-    private String agreedPersonal;
+    private Boolean agreedPersonal;
 
 }
