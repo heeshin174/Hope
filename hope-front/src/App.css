@@ -128,3 +128,11 @@
 .search-light-icon {
     background-image: url(assets/images/search-light.png);
 }
+
+.auth-background {
+    background-image: url(assets/images/auth-background.png);
+}
+
+.auth-icon {
+    background-image: url(assets/images/auth-logo.png);
+}
