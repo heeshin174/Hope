@@ -17,6 +17,7 @@
     padding: 11px 16px 11px 0px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
 .inputbox-container-error {
@@ -28,6 +29,7 @@
 }
 
 .input {
+    width:100%;
     border: none;
     background: none;
     outline: none;
