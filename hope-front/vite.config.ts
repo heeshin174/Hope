@@ -13,7 +13,8 @@ export default defineConfig({
       'layouts': path.resolve(__dirname, './src/layouts'),
       'views': path.resolve(__dirname, './src/views'),
       'constant': path.resolve(__dirname, './src/constant'),
-      'stores': path.resolve(__dirname, './src/stores')
+      'stores': path.resolve(__dirname, './src/stores'),
+      'apis': path.resolve(__dirname, './src/apis')
     }
   }
 });
