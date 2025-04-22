@@ -5,7 +5,7 @@ public interface ResponseCode {
     String SUCCESS = "SU";
 
     // HTTP status 400
-    String VALIDATION_ERROR = "VE";
+    String VALIDATION_FAIL = "VF";
     String DUPLICATE_EMAIL = "DE";
     String DUPLICATE_NICKNAME = "DN";
     String DUPLICATE_TEL_NUMBER = "DT";

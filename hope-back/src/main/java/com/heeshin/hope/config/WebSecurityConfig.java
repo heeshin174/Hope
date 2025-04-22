@@ -57,7 +57,7 @@ public class WebSecurityConfig {
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://www.localhost:5173"); // Replace with your actual frontend URL
+        configuration.addAllowedOrigin("http://localhost:5173"); // Replace with your actual frontend URL
         // configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
