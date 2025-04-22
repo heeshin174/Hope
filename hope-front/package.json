@@ -13,6 +13,7 @@
     "axios": "^1.8.4",
     "react": "^19.0.0",
     "react-cookie": "^8.0.1",
+    "react-daum-postcode": "^3.2.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.5.0",
     "zustand": "^5.0.3"

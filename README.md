@@ -74,6 +74,8 @@ See details at [Troubleshooting](./Trobleshooting.md)
   - 다른 format에도 볼 수 있게 pdf 파일 다운 제공
 4. 이 내용으로 무엇을 할 수 있는 지 실습 내용 제공 (실습 part면)
 
+여기에 있는 글이나 외부 링크를 엮어서 나만의 학습 지도를 만들기 가능 (개인 roadmap 지원 / 공유도 가능)
+
 - 공간 변화: 모바일 웹에서 이동하면서 볼 수 있음
 - 시간 변화: 본인의 이해도를 easy, normal, hard를 선택하여 시간이 지나면 재시험 강요
 
