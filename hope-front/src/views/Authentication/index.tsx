@@ -1,10 +1,10 @@
-import { ChangeEvent, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import './style.css'
 import InputBox from 'components/InputBox';
-import { SignInRequestDto } from 'apis/request/auth';
-import { SignInResponseDto } from 'apis/response/auth';
+import { SignInRequestDto, SignUpRequestDto } from 'apis/request/auth';
+import { SignInResponseDto, SignUpResponseDto } from 'apis/response/auth';
 import { ResponseDto } from 'apis/response';
-import { signInRequest } from 'apis';
+import { signInRequest, signUpRequest } from 'apis';
 import { useCookies } from 'react-cookie';
 import { MAIN_PATH } from 'constant';
 import { useNavigate } from 'react-router-dom';
@@ -132,7 +132,7 @@ export default function Authentication() {
 		const addressRef = useRef<HTMLInputElement | null>(null);
 		const addressDetailRef = useRef<HTMLInputElement | null>(null);
 
-		const [page, setPage] = useState<1 | 2>(2);
+		const [page, setPage] = useState<1 | 2>(1);
 		const [email, setEmail] = useState<string>('');
 		const [password, setPassword] = useState<string>('');
 		const [passwordCheck, setPasswordCheck] = useState<string>('');
@@ -164,6 +164,31 @@ export default function Authentication() {
 
 		// function: Daum 주소 검색 pop-up 함수 (react-daum-postcode)
 		const open = useDaumPostcodePopup();
+		// function: sign up response 처리 함수
+		const signUpResponse = (responseBody: SignUpResponseDto | ResponseDto | null) => {
+			if (!responseBody) {
+				alert('네트워크 이상입니다.');
+				return;
+			}
+			const { code } = responseBody;
+			if (code === 'DE') {
+				setEmailError(true);
+				setEmailErrorMessage('중복되는 이메일 주소입니다.');
+			}
+			if (code === 'DN') {
+				setNicknameError(true);
+				setNicknameErrorMessage('중복되는 닉네임입니다.');
+			}
+			if (code === 'DT') {
+				setTelNumberError(true);
+				setTelNumberErrorMessage('중복되는 핸드폰 번호입니다.');
+			}
+			if (code === 'VF') alert('모든 값을 입력하세요.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+			setView('sign-in');
+			alert('회원가입이 완료되었습니다.');
+		}
 
 		// event handler
 		const onEmailChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -252,7 +277,46 @@ export default function Authentication() {
 			setPage(2);
 		}
 		const onSignUpButtonClickHandler = () => {
-			alert('회원가입 중입니다.');
+			const emailPattern = /^[a-zA-Z0-9]*@([-.]?[a-zA-Z0-9])*\.[a-zA-Z]{2,4}$/;
+			const isEmailPattern = emailPattern.test(email);
+			if (!isEmailPattern) {
+				setEmailError(true);
+				setEmailErrorMessage('이메일 주소 포멧이 맞지 않습니다.');
+			}
+			const isCheckedPassword = password.trim().length >= 8;
+			if (!isCheckedPassword) {
+				setPasswordError(true);
+				setPasswordErrorMessage('비밀번호는 8자 이상 입력해주세요.');
+			}
+			const isEqualPassword = password === passwordCheck;
+			if (!isEqualPassword) {
+				setPasswordCheckError(true);
+				setPasswordCheckErrorMessage('비밀번호가 일치하지 않습니다.');
+			}
+			if (!isEmailPattern || !isCheckedPassword || !isEqualPassword) {
+				setPage(1);
+				return;
+			}
+			const hasNickname = nickname.trim().length > 0;
+			if (!hasNickname) {
+				setNicknameError(true);
+				setNicknameErrorMessage('닉네임을 입력해주세요.');
+			}
+			const telNumberPattern = /^[0-9]{11,13}$/;
+			const isTelNumberPattern = telNumberPattern.test(telNumber);
+			if (!isTelNumberPattern) {
+				setTelNumberError(true);
+				setTelNumberErrorMessage('숫자만 입력해주세요.');
+			}
+			const hasAddress = address.trim().length > 0;
+			if (!hasAddress) {
+				setAddressError(true);
+				setAddressErrorMessage('주소를 선택해주세요.')
+			}
+			if (!agreedPersonal) setAgreedPersonalError(true);
+			if (!hasNickname || !isTelNumberPattern || !agreedPersonal) return;
+			const requestBody: SignUpRequestDto = { email, password, nickname, telNumber, address, addressDetail, agreedPersonal };
+			signUpRequest(requestBody).then(signUpResponse);
 		}
 		const onSignInLinkClickHandler = () => {
 			setView('sign-in');
@@ -270,9 +334,7 @@ export default function Authentication() {
 		}
 		const onPasswordCheckKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
 			if (e.key !== 'Enter') return;
-			if (!nicknameRef.current) return;
 			onNextButtonClickHandler();
-			nicknameRef.current.focus();
 		}
 		const onNicknameKeyDownHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
 			if (e.key !== 'Enter') return;
@@ -296,10 +358,19 @@ export default function Authentication() {
 		const onComplete = (data: Address) => {
 			const { address } = data;
 			setAddress(address);
+			setAddressError(false);
+			setAddressErrorMessage('');
 			if (!addressDetailRef.current) return;
 			addressDetailRef.current.focus();
 		}
 
+		// effect: page 변경 시마다 실행될 함수. 첫 input focus
+		useEffect(() => {
+			if (page === 2) {
+				if (!nicknameRef.current) return;
+				nicknameRef.current.focus();
+			}
+		}, [page]);
 
 		return (
 			<div className="auth-card">
