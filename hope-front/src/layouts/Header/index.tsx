@@ -92,6 +92,7 @@ export default function Header() {
 		// event handler: 로그아웃 버튼 클릭 이벤트 처리 함수
 		const onSignOutButtonClickHandler = () => {
 			resetLoginUser();
+			setCookies('accessToken', '', {path: MAIN_PATH(), expires: new Date()})
 			navigate(MAIN_PATH());
 		};
 
@@ -99,6 +100,12 @@ export default function Header() {
 		if (isLogin) return <div className="white-button" onClick={onMyPageButtonClickHandler}>{'MyPage'}</div>
 		return <div className="black-button" onClick={onSignInButtonClickHandler}>{'login'}</div>
 	}
+
+	// effect: login user가 변경될 때마다 실행될 함수
+	useEffect(() => {
+		setLogin(loginUser !== null) 
+
+	}, [loginUser])
 
 	// component: upload button
 	const UploadButton = () => {
