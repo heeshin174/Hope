@@ -1,6 +1,6 @@
 package com.heeshin.hope.service.implement;
 
-import com.heeshin.hope.domain.UserEntity;
+import com.heeshin.hope.entity.UserEntity;
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.response.user.GetSignInUserResponseDto;
 import com.heeshin.hope.repository.UserRepository;

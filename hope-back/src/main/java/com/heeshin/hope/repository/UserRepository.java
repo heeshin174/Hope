@@ -1,6 +1,6 @@
 package com.heeshin.hope.repository;
 
-import com.heeshin.hope.domain.UserEntity;
+import com.heeshin.hope.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

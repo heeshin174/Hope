@@ -1,4 +1,4 @@
-package com.heeshin.hope.domain;
+package com.heeshin.hope.entity;
 
 import com.heeshin.hope.dto.request.auth.SignUpRequestDto;
 import jakarta.persistence.Entity;

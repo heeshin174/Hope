@@ -1,10 +1,9 @@
 package com.heeshin.hope.repository;
 
-import com.heeshin.hope.entity.BoardEntity;
+import com.heeshin.hope.entity.SearchLogEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
+public interface SearchLogRepository extends JpaRepository<SearchLogEntity, Long> {
 }

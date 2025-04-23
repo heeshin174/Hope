@@ -1,4 +1,4 @@
-package com.heeshin.hope.domain;
+package com.heeshin.hope.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
