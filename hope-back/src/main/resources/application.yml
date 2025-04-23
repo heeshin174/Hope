@@ -3,6 +3,10 @@ spring:
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
     driver-class-name: org.h2.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 100MB
 #  sql: # data.sql initialization
 #    init:
 #      mode: always
@@ -22,3 +26,6 @@ spring:
 #        port: 6379
 #        password: your_redis_password
 secret-key: sdhfksjdahfbjksdfbksdhfksjdahfbjksdfbksdhfksjdahfbjksdfbksdhfksjdahfbjksdfbk
+file:
+  path: C:/Users/Shin/OneDrive/Desktop/
+  url: http://localhost:8080/file/
