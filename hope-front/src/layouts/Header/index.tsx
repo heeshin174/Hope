@@ -4,6 +4,10 @@ import './style.css'
 import { AUTH_PATH, BOARD_DETAIL_PATH, BOARD_PATH, BOARD_UPDATE_PATH, BOARD_WRITE_PATH, MAIN_PATH, SEARCH_PATH, USER_PATH } from 'constant';
 import { useCookies } from 'react-cookie';
 import { useBoardStore, useLoginUserStore } from 'stores';
+import { fileUploadRequest, postBoardRequest } from 'apis';
+import { PostBoardRequestDto } from 'apis/request/board';
+import { PostBoardResponseDto } from 'apis/response/board';
+import { ResponseDto } from 'apis/response';
 
 export default function Header() {
 	// state: 로그인 유저 상태
@@ -104,7 +108,6 @@ export default function Header() {
 	// effect: login user가 변경될 때마다 실행될 함수
 	useEffect(() => {
 		setLogin(loginUser !== null) 
-
 	}, [loginUser])
 
 	// component: upload button
@@ -112,10 +115,36 @@ export default function Header() {
 		// state: 게시물 상태
 		const { title, content, boardImageFileList, resetBoard } = useBoardStore();
 
-		// event handler: 업로드 버튼 클릭 이벤트 처리 함수
-		const onUploadButtonClickHandler = () => {
-
+		// function: post board response 처리 함수
+		const postBoardResponse = (responseBody: PostBoardResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code === 'AF' || code === 'NU') navigate(AUTH_PATH());
+			if (code === 'VF') alert('제목과 내용은 필수입니다.');
+			if (code !== 'SU') return;
+			resetBoard();
+			if (!loginUser) return;
+			const { email } = loginUser;
+			navigate(USER_PATH(email));
 		}
+
+		// event handler: 업로드 버튼 클릭 이벤트 처리 함수
+		const onUploadButtonClickHandler = async () => {
+			const accessToken = cookies.accessToken;
+			if (!accessToken) return;
+			const boardImageList: string[] = [];
+			for (const file of boardImageFileList) {
+				const data = new FormData();
+				data.append('file', file);
+				const url = await fileUploadRequest(data);
+				if (url) boardImageList.push(url);
+			}
+			const requestBody: PostBoardRequestDto = { title, content, boardImageList };
+			postBoardRequest(requestBody, accessToken).then(postBoardResponse);
+		}
+
+		// render
 		if (title && content)
 			return <div className="black-button" onClick={onUploadButtonClickHandler}>{'Upload'}</div>
 		return <div className="disable-button">{'Upload'}</div>
