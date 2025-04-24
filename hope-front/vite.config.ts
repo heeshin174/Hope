@@ -14,7 +14,8 @@ export default defineConfig({
       'views': path.resolve(__dirname, './src/views'),
       'constant': path.resolve(__dirname, './src/constant'),
       'stores': path.resolve(__dirname, './src/stores'),
-      'apis': path.resolve(__dirname, './src/apis')
+      'apis': path.resolve(__dirname, './src/apis'),
+      'mocks': path.resolve(__dirname, './src/mocks')
     }
   }
 });
