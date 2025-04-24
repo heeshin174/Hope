@@ -144,3 +144,57 @@ Http Status: 500 (Internal Server Error)
   "message": "Database error"
 }
 ```
+
+#### 좋아요 리스트
+
+`GET /api/v1/board/{boardNumber}/favorite-list`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "favoriteList": [
+    {
+      "email": "email@email.com",
+      "nickname": "nickname",
+      "profileImage": null
+    },
+    {
+      "email": "email2@email.com",
+      "nickname": "nickname2",
+      "profileImage": null
+    }
+  ]
+}
+```
+
+Fail
+
+1. 존재하지 않는 게시물
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NB",
+  "message": "This board does not exist."
+}
+```
+
+2. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```

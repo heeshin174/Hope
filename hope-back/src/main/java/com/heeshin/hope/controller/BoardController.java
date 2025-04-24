@@ -2,6 +2,7 @@ package com.heeshin.hope.controller;
 
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
 import com.heeshin.hope.dto.response.board.GetBoardResponseDto;
+import com.heeshin.hope.dto.response.board.GetFavoriteListResponseDto;
 import com.heeshin.hope.dto.response.board.PostBoardResponseDto;
 import com.heeshin.hope.dto.response.board.PutFavoriteResponseDto;
 import com.heeshin.hope.service.BoardService;
@@ -18,15 +19,21 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @PostMapping
-    public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody, @AuthenticationPrincipal String email) {
-        ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
-        return response;
-    }
-
     @GetMapping("/{boardNumber}")
     public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Long boardNumber) {
         ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardNumber);
+        return response;
+    }
+
+    @GetMapping("/{boardNumber}/favorite-list")
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(@PathVariable("boardNumber") Long boardNumber) {
+        ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardNumber);
+        return response;
+    }
+
+    @PostMapping
+    public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody, @AuthenticationPrincipal String email) {
+        ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
         return response;
     }
 

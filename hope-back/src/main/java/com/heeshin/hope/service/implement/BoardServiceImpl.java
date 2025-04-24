@@ -1,6 +1,7 @@
 package com.heeshin.hope.service.implement;
 
 import com.heeshin.hope.dto.response.board.GetBoardResponseDto;
+import com.heeshin.hope.dto.response.board.GetFavoriteListResponseDto;
 import com.heeshin.hope.dto.response.board.PutFavoriteResponseDto;
 import com.heeshin.hope.entity.BoardEntity;
 import com.heeshin.hope.dto.ResponseDto;
@@ -13,6 +14,7 @@ import com.heeshin.hope.repository.FavoriteRepository;
 import com.heeshin.hope.repository.ImageRepository;
 import com.heeshin.hope.repository.UserRepository;
 import com.heeshin.hope.repository.resultSet.GetBoardResultSet;
+import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
 import com.heeshin.hope.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -86,6 +88,22 @@ public class BoardServiceImpl implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetBoardResponseDto.success(resultSet, imageEntities);
+    }
+
+    @Override
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Long boardNumber) {
+        List<GetFavoriteListResultSet> resultSets = new ArrayList<>();
+
+        try {
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if (!existedBoard) return GetFavoriteListResponseDto.noExistBoard();
+
+            resultSets = favoriteRepository.getFavoriteList(boardNumber);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetFavoriteListResponseDto.success(resultSets);
     }
 
     @Override
