@@ -1,5 +1,6 @@
 package com.heeshin.hope.service.implement;
 
+import com.heeshin.hope.dto.response.board.GetBoardResponseDto;
 import com.heeshin.hope.entity.BoardEntity;
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
@@ -8,6 +9,7 @@ import com.heeshin.hope.entity.ImageEntity;
 import com.heeshin.hope.repository.BoardRepository;
 import com.heeshin.hope.repository.ImageRepository;
 import com.heeshin.hope.repository.UserRepository;
+import com.heeshin.hope.repository.resultSet.GetBoardResultSet;
 import com.heeshin.hope.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -58,5 +60,27 @@ public class BoardServiceImpl implements BoardService {
         }
         // 모든 과정이 성공적으로 완료되면 성공 응답 반환
         return PostBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super GetBoardResponseDto> getBoard(Long boardNumber) {
+        GetBoardResultSet resultSet= null;
+        List<ImageEntity> imageEntities = new ArrayList<>();
+        try {
+            resultSet = boardRepository.getBoard(boardNumber);
+            if (resultSet == null) return GetBoardResponseDto.noExistBoard();
+
+            imageEntities = imageRepository.findByBoardNumber(boardNumber);
+
+            // view count 증가
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            boardEntity.increaseViewCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetBoardResponseDto.success(resultSet, imageEntities);
     }
 }
