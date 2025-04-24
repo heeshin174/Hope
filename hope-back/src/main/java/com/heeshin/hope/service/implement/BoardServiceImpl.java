@@ -1,18 +1,14 @@
 package com.heeshin.hope.service.implement;
 
-import com.heeshin.hope.dto.response.board.GetBoardResponseDto;
-import com.heeshin.hope.dto.response.board.GetFavoriteListResponseDto;
-import com.heeshin.hope.dto.response.board.PutFavoriteResponseDto;
+import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
+import com.heeshin.hope.dto.response.board.*;
 import com.heeshin.hope.entity.BoardEntity;
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
-import com.heeshin.hope.dto.response.board.PostBoardResponseDto;
+import com.heeshin.hope.entity.CommentEntity;
 import com.heeshin.hope.entity.FavoriteEntity;
 import com.heeshin.hope.entity.ImageEntity;
-import com.heeshin.hope.repository.BoardRepository;
-import com.heeshin.hope.repository.FavoriteRepository;
-import com.heeshin.hope.repository.ImageRepository;
-import com.heeshin.hope.repository.UserRepository;
+import com.heeshin.hope.repository.*;
 import com.heeshin.hope.repository.resultSet.GetBoardResultSet;
 import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
 import com.heeshin.hope.service.BoardService;
@@ -31,6 +27,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
     private final FavoriteRepository favoriteRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
@@ -66,6 +63,28 @@ public class BoardServiceImpl implements BoardService {
         }
         // 모든 과정이 성공적으로 완료되면 성공 응답 반환
         return PostBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Long boardNumber, String email) {
+        try {
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return PostCommentResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PostCommentResponseDto.noExistUser();
+
+            CommentEntity commentEntity = new CommentEntity(dto, boardNumber, email);
+            commentRepository.save(commentEntity);
+
+            boardEntity.increaseCommentCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return PostCommentResponseDto.success();
     }
 
     @Override

@@ -198,3 +198,87 @@ Http Status: 500 (Internal Server Error)
   "message": "Database error"
 }
 ```
+
+#### Comment 작성
+
+`POST /api/v1/board/{boardNumber}/comment`
+
+**Header**
+
+```
+name         | value
+---            ---
+Authrization | Bearer Token 
+```
+
+**Request**
+
+```
+{
+  "content": "오늘 점심은 불고기."
+}
+```
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success"
+}
+```
+
+Fail
+
+1. 유효성 검사 실패
+
+```
+Http Status: 400 (Bad Request)
+{
+  "code": "VF",
+  "message": "Validation failed"
+}
+```
+
+2. 존재하지 않는 게시물
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NB",
+  "message": "This board does not exist."
+}
+```
+
+3. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+4. 인증 실패
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "AF",
+  "message": "Authorization Failed"
+}
+```
+
+5. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```

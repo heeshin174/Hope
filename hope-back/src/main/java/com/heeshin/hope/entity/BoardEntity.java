@@ -1,6 +1,7 @@
 package com.heeshin.hope.entity;
 
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
+import com.heeshin.hope.util.DateTimeUtils;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,14 +31,9 @@ public class BoardEntity {
     private String writerEmail;
 
     public BoardEntity(PostBoardRequestDto dto, String email) {
-
-        Date now = Date.from(Instant.now());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String writeDatetime = simpleDateFormat.format(now);
-
         this.title = dto.getTitle();
         this.content = dto.getContent();
-        this.writeDatetime = writeDatetime;
+        this.writeDatetime = DateTimeUtils.getCurrentDateTimeString();
         this.favoriteCount = 0;
         this.viewCount = 0;
         this.writerEmail = email;
@@ -51,5 +47,11 @@ public class BoardEntity {
     }
     public void decreaseFavoriteCount() {
         this.favoriteCount--;
+    }
+    public void increaseCommentCount() {
+        this.commentCount++;
+    }
+    public void decreaseCommentCount() {
+        this.commentCount--;
     }
 }
