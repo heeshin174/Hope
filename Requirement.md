@@ -282,3 +282,59 @@ Http Status: 500 (Internal Server Error)
   "message": "Database error"
 }
 ```
+
+#### Comment list 조회
+
+`GET /api/v1/board/{boardNumber}/comment-list`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "commentList": [
+    {
+      "nickname": "nickname",
+      "profileImage": null,
+      "writeDatetime": "2025.04.04.01:33:00",
+      "content": "오늘 점심은 불고기"
+    },
+    {
+      "nickname": "nickname2",
+      "profileImage": null,
+      "writeDatetime": "2025.04.05.11:33:00",
+      "content": "오늘 점심은 불고기야?"
+    }
+  ]
+}
+```
+
+Fail
+
+1. 존재하지 않는 게시물
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NB",
+  "message": "This board does not exist."
+}
+```
+
+2. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```

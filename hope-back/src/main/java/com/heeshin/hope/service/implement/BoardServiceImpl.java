@@ -10,6 +10,7 @@ import com.heeshin.hope.entity.FavoriteEntity;
 import com.heeshin.hope.entity.ImageEntity;
 import com.heeshin.hope.repository.*;
 import com.heeshin.hope.repository.resultSet.GetBoardResultSet;
+import com.heeshin.hope.repository.resultSet.GetCommentListResultSet;
 import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
 import com.heeshin.hope.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -123,6 +124,22 @@ public class BoardServiceImpl implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetFavoriteListResponseDto.success(resultSets);
+    }
+
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Long boardNumber) {
+        List<GetCommentListResultSet> resultSets = new ArrayList<>();
+
+        try {
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if (!existedBoard) return GetCommentListResponseDto.noExistBoard();
+
+            resultSets = commentRepository.getCommentList(boardNumber);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return GetCommentListResponseDto.success(resultSets);
     }
 
     @Override
