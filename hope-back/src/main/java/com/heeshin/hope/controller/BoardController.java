@@ -3,6 +3,7 @@ package com.heeshin.hope.controller;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
 import com.heeshin.hope.dto.response.board.GetBoardResponseDto;
 import com.heeshin.hope.dto.response.board.PostBoardResponseDto;
+import com.heeshin.hope.dto.response.board.PutFavoriteResponseDto;
 import com.heeshin.hope.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,12 @@ public class BoardController {
     @GetMapping("/{boardNumber}")
     public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Long boardNumber) {
         ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardNumber);
+        return response;
+    }
+
+    @PutMapping("/{boardNumber}/favorite")
+    public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Long boardNumber, @AuthenticationPrincipal String email) {
+        ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, email);
         return response;
     }
 }

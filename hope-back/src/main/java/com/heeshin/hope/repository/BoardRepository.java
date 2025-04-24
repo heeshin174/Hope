@@ -29,4 +29,6 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Long> {
             nativeQuery = true
     )
     GetBoardResultSet getBoard(Long boardNumber);
+
+    boolean existsByBoardNumber(Long boardNumber);
 }
