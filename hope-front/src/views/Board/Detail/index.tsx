@@ -70,18 +70,18 @@ export default function BoardDetail() {
 						<div className="icon-button">
 							<div className="icon favorite-fill-icon"></div>
 						</div>
-						<div className="board-detail-bottom-button-text"></div>
+						<div className="board-detail-bottom-button-text">{`좋아요 ${12}` }</div>
 						<div className="icon-button">
-							<div className="icon up-light-icon"></div>
+							<div className="icon expand-up-right-icon"></div>
 						</div>
 					</div>
 					<div className="board-detail-bottom-button-group">
 						<div className="icon-button">
 							<div className="icon comment-icon"></div>
 						</div>
-						<div className="board-detail-bottom-button-text"></div>
+						<div className="board-detail-bottom-button-text">{ `댓글 ${12}`}</div>
 						<div className="icon-button">
-							<div className="icon up-light-icon"></div>
+							<div className="icon expand-up-right-icon"></div>
 						</div>
 					</div>
 				</div>
@@ -101,13 +101,15 @@ export default function BoardDetail() {
 						</div>
 					</div>
 					<div className="divider"></div>
-					<div className="board-detail-bottom-comment-paginatin-box">
+					<div className="board-detail-bottom-comment-pagination-box">
 						<Pagination />
 					</div>
-					<div className="board-detail-bottom-comment-input-container">
-						<textarea className="board-detail-bottom-comment-textarea" placeholder='댓글을 작성해주세요.' />
-						<div className="board-detail-bottom-comment-button-box">
-							<div className="disable-button">{'댓글달기'}</div>
+					<div className="board-detail-bottom-comment-input-box">
+						<div className="board-detail-bottom-comment-input-container">
+							<textarea className="board-detail-bottom-comment-textarea" placeholder='댓글을 작성해주세요.' />
+							<div className="board-detail-bottom-comment-button-box">
+								<div className="disable-button">{'댓글달기'}</div>
+							</div>
 						</div>
 					</div>
 				</div>

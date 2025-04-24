@@ -181,3 +181,12 @@
 .more-icon {
     background-image: url(assets/images/more.png);
 }
+.favorite-light-icon {
+    background-image: url(assets/images/favorite-light.png);
+}
+.favorite-fill-icon {
+    background-image: url(assets/images/favorite-fill.png);
+}
+.comment-icon {
+    background-image: url(assets/images/chat-light.png);
+}
