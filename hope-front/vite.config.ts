@@ -12,6 +12,7 @@ export default defineConfig({
       'apis': path.resolve(__dirname, './src/apis'), 
       'components': path.resolve(__dirname, './src/components'),
       'constant': path.resolve(__dirname, './src/constant'),
+      'hooks': path.resolve(__dirname, './src/hooks'),
       'layouts': path.resolve(__dirname, './src/layouts'),
       'mocks': path.resolve(__dirname, './src/mocks'),
       'stores': path.resolve(__dirname, './src/stores'),

@@ -209,6 +209,7 @@
 .board-detail-bottom-comment-pagination-box {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 }
 
 .board-detail-bottom-comment-input-box {

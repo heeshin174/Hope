@@ -14,6 +14,7 @@ import { ResponseDto } from 'apis/response';
 import { DeleteBoardResponseDto, GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto, PostCommentResponseDto, PutFavoriteResponseDto } from 'apis/response/board';
 import { useCookies } from 'react-cookie';
 import { PostCommentRequestDto } from 'apis/request/board';
+import { usePagination } from 'hooks';
 
 export default function BoardDetail() {
 
@@ -143,13 +144,14 @@ export default function BoardDetail() {
 
 		// state
 		const [favoriteList, setFavoriteList] = useState<FavoriteListItem[]>([]);
-		const [commentList, setCommentList] = useState<CommentListItem[]>([]);
 		const [isFavorite, setFavorite] = useState<boolean>(false);
 		const [showFavorite, setShowFavorite] = useState<boolean>(false);
 		const [showComment, setShowComment] = useState<boolean>(false);
 		const [comment, setComment] = useState<string>('');
-		// state: 댓글 
+		const [totalCommentCount, setTotalCommentCount] = useState<number>(0);
+		// state: 댓글 참조
 		const commentRef = useRef<HTMLTextAreaElement | null>(null);
+		const { currentPage,setCurrentPage,currentSection,setCurrentSection,viewList,viewPageList,totalSection,setTotalList } = usePagination<CommentListItem>(3);
 
 		// function: get favorite list response 처리 함수
 		const getFavoriteListResponse = (responseBody: GetFavoriteListResponseDto | ResponseDto | null) => {
@@ -174,7 +176,8 @@ export default function BoardDetail() {
 			if (code === 'DBE') alert('데이터베이스 오류입니다.');
 			if (code !== 'SU') return;
 			const { commentList } = responseBody as GetCommentListResponseDto;
-			setCommentList(commentList);
+			setTotalList(commentList);
+			setTotalCommentCount(commentList.length);
 		}
 		const putFavoriteResponse = (responseBody: PutFavoriteResponseDto | ResponseDto | null) => {
 			if (!responseBody) return;
@@ -236,7 +239,7 @@ export default function BoardDetail() {
 
 		// 댓글 목록을 렌더링 직전에 정렬
 		// commentList 상태가 업데이트될 때마다 이 부분은 다시 실행됩니다.
-		const sortedCommentList = [...commentList];
+		const sortedCommentList = [...viewList];
 		sortedCommentList.sort((a, b) => {
 			const dateA = new Date(a.writeDatetime);
 			const dateB = new Date(b.writeDatetime);
@@ -271,7 +274,7 @@ export default function BoardDetail() {
 						<div className="icon-button">
 							<div className="icon comment-icon"></div>
 						</div>
-						<div className="board-detail-bottom-button-text">{ `댓글 ${commentList.length}`}</div>
+						<div className="board-detail-bottom-button-text">{ `댓글 ${totalCommentCount}`}</div>
 						<div className="icon-button" onClick={onShowCommentClickHandler}>
 							{showComment ?
 								<div className="icon expand-up-light-icon"></div> :
@@ -292,14 +295,21 @@ export default function BoardDetail() {
 				{showComment && 
 				<div className="board-detail-bottom-comment-box">
 					<div className="board-detail-bottom-comment-container">
-						<div className="board-detail-bottom-comment-title">{'댓글 '}<span className='emphasis'>{commentList.length}</span></div>
+						<div className="board-detail-bottom-comment-title">{'댓글 '}<span className='emphasis'>{totalCommentCount}</span></div>
 						<div className="board-detail-bottom-comment-list-container">
 							{sortedCommentList.map((item, index)=> <CommentItem key={index} commentListItem={item} /> )}
 						</div>
 					</div>
 					<div className="divider"></div>
 					<div className="board-detail-bottom-comment-pagination-box">
-						<Pagination />
+						<Pagination
+							currentPage={currentPage}
+							currentSection={currentSection}
+							setCurrentPage={setCurrentPage}
+							setCurrentSection={setCurrentSection}
+							viewPageList={viewPageList}
+							totalSection={totalSection}
+						/>
 					</div>
 					{loginUser !== null && 
 						<div className="board-detail-bottom-comment-input-box">

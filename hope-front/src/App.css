@@ -80,14 +80,10 @@
     background-color: rgba(200,200,200,0.25);
 }
 
-.icon-box {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
+.icon-box-small {
+    width: 20px;
+    height: 20px;
 }
-
 .icon-button {
     width: 24px;
     height: 24px;
@@ -98,9 +94,15 @@
     align-items: center;
     cursor: pointer;
 }
-
 .icon-button:hover {
     background-color: rgba(0, 0, 0, 0.05);
+}
+.icon-box {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 
 .icon {
@@ -119,16 +121,17 @@
     background-image: url(assets/images/eye-light-on.png);
 }
 
-.expand-right-icon {
-    background-image: url(assets/images/expand-right.png);
-}
-
 .expand-down-light-icon {
     background-image: url(assets/images/expand-down-light.png);
 }
-
+.expand-left-icon {
+    background-image: url(assets/images/expand-left.png);
+}
 .expand-right-light-icon {
     background-image: url(assets/images/expand-right-light.png);
+}
+.expand-right-icon {
+    background-image: url(assets/images/expand-right.png);
 }
 
 .expand-up-light-icon {
