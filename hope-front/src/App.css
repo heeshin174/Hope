@@ -123,12 +123,16 @@
     background-image: url(assets/images/expand-right.png);
 }
 
+.expand-down-light-icon {
+    background-image: url(assets/images/expand-down-light.png);
+}
+
 .expand-right-light-icon {
     background-image: url(assets/images/expand-right-light.png);
 }
 
-.expand-up-right-icon {
-    background-image: url(assets/images/expand-up-right.png);
+.expand-up-light-icon {
+    background-image: url(assets/images/expand-up-light.png);
 }
 
 .expand-up-right-light-icon {

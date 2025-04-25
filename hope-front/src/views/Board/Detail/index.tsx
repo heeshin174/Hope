@@ -9,6 +9,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useLoginUserStore } from 'stores';
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constant';
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
+import { getBoardRequest, increaseViewCountRequest } from 'apis';
+import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
+import { ResponseDto } from 'apis/response';
+import { IncreaseViewCountResponseDto } from 'apis/response/board';
 
 export default function BoardDetail() {
 
@@ -18,12 +22,41 @@ export default function BoardDetail() {
 
 	// function: 네이게이트 함수
 	const navigate = useNavigate();
+	const increaseViewCountResponse = (responseBody: IncreaseViewCountResponseDto | ResponseDto | null) => {
+		if (!responseBody) return;
+		const { code } = responseBody;
+		if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+		if (code === 'DBE') alert('데이터베이스 오류입니다.');
+	}
 
 	const BoardDetailTop = () => {
 
 		// state
 		const [board, setBoard] = useState<Board | null>(null);
 		const [showMore, setShowMore] = useState<boolean>(false);
+		const [isWriter, setWriter] = useState<boolean>(false);
+
+		// function 
+		const getBoardResponse = (responseBody: GetBoardResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') {
+				navigate(MAIN_PATH());
+				return;
+			}
+
+			const board: Board = { ...responseBody as GetBoardResponseDto };
+			setBoard(board);
+
+			if (!loginUser) {
+				setWriter(false);
+				return;
+			}
+			const isWriter = loginUser.email === board.writerEmail;
+			setWriter(isWriter);
+		}
 
 		// event handler
 		const onNicknameClickHandler = () => {
@@ -46,7 +79,11 @@ export default function BoardDetail() {
 
 		// effect: 게시물 번호 path variable이 바뀔 때 마다 게시물 불러오기
 		useEffect(() => {
-			setBoard(boardMock);
+			if (!boardNumber) {
+				navigate(MAIN_PATH());
+				return;
+			}
+			getBoardRequest(boardNumber).then(getBoardResponse);
 		}, [boardNumber]);
 
 		if (!board) return <></>
@@ -61,9 +98,11 @@ export default function BoardDetail() {
 							<div className="board-detail-info-divider"></div>
 							<div className="board-detail-write-date">{board.writeDatetime}</div>
 						</div>
-						<div className="icon-button" onClick={onMoreButtonClickHandler}>
-							<div className="icon more-icon"></div>
-						</div>
+						{isWriter &&
+							<div className="icon-button" onClick={onMoreButtonClickHandler}>
+								<div className="icon more-icon"></div>
+							</div>
+						}
 						{showMore && (
 							<div className="board-detail-more-box">
 								<div className="board-detail-update-button" onClick={onUpdateButtonClickHandler}>{'수정'}</div>
@@ -136,8 +175,8 @@ export default function BoardDetail() {
 						<div className="board-detail-bottom-button-text">{`좋아요 ${favoriteList.length}` }</div>
 						<div className="icon-button" onClick={onShowFavoriteClickHandler}>
 							{showFavorite ? 
-							<div className="icon expand-up-right-icon"></div> :
-							<div className="icon expand-down-right-icon"></div>}
+							<div className="icon expand-up-light-icon"></div> :
+							<div className="icon expand-down-light-icon"></div>}
 						</div>
 					</div>
 					<div className="board-detail-bottom-button-group">
@@ -147,8 +186,8 @@ export default function BoardDetail() {
 						<div className="board-detail-bottom-button-text">{ `댓글 ${commentList.length}`}</div>
 						<div className="icon-button" onClick={onShowCommentClickHandler}>
 							{showComment ?
-								<div className="icon expand-up-right-icon"></div> :
-								<div className="icon expand-down-right-icon"></div> }
+								<div className="icon expand-up-light-icon"></div> :
+								<div className="icon expand-down-light-icon"></div> }
 						</div>
 					</div>
 				</div>
@@ -187,6 +226,18 @@ export default function BoardDetail() {
 			</div>
 		);
 	};
+
+	// effect
+	let effectFlag = true;
+	useEffect(() => {
+		if (!boardNumber) return;
+		if (effectFlag) {
+			effectFlag = false;
+			return;
+		}
+		increaseViewCountRequest(boardNumber).then(increaseViewCountResponse);
+	}, [boardNumber])
+
 
 	return (
 		<div id="board-detail-wrapper">
