@@ -3,6 +3,7 @@ package com.heeshin.hope.repository;
 import com.heeshin.hope.entity.FavoriteEntity;
 import com.heeshin.hope.entity.primaryKey.FavoritePk;
 import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,4 +27,7 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Favori
             nativeQuery = true
     )
     List<GetFavoriteListResultSet> getFavoriteList(Long boardNumber);
+
+    @Transactional
+    void deleteByBoardNumber(Long boardNumber);
 }

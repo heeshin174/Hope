@@ -2,23 +2,25 @@ import FavoriteItem from 'components/FavoriteItem';
 import './style.css'
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Board, CommentListItem, FavoriteListItem } from 'types/interface';
-import { commentListMock } from 'mocks';
 import CommentItem from 'components/CommentItem';
 import Pagination from 'components/Pagination';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLoginUserStore } from 'stores';
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constant';
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
-import { getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest } from 'apis';
+import { deleteBoardRequest, getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest, postCommentRequest, putFavoriteRequest } from 'apis';
 import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
 import { ResponseDto } from 'apis/response';
-import { GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto } from 'apis/response/board';
+import { DeleteBoardResponseDto, GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto, PostCommentResponseDto, PutFavoriteResponseDto } from 'apis/response/board';
+import { useCookies } from 'react-cookie';
+import { PostCommentRequestDto } from 'apis/request/board';
 
 export default function BoardDetail() {
 
 	// state: 게시물 번호 path variable 상태
 	const { boardNumber } = useParams();
 	const { loginUser } = useLoginUserStore();
+	const [cookies, setCookies] = useCookies();
 
 	// function: 네이게이트 함수
 	const navigate = useNavigate();
@@ -58,6 +60,21 @@ export default function BoardDetail() {
 			setWriter(isWriter);
 		}
 
+		// functoin: delete board response 처리 함수
+		const deleteBoardResponse = (responseBody: DeleteBoardResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'VF') alert('잘못된 접근입니다.');
+			if (code === 'NU') alert('존재하지 않는 유저입니다.');
+			if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+			if (code === 'NP') alert('권한이 없습니다.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+			alert('게시물이 성공적으로 삭제되었습니다.');
+			navigate(MAIN_PATH());
+			return;
+		}
+
 		// event handler
 		const onNicknameClickHandler = () => {
 			if (!board) return;
@@ -72,8 +89,9 @@ export default function BoardDetail() {
 			navigate(BOARD_PATH() + '/' + BOARD_UPDATE_PATH(board.boardNumber));
 		}
 		const onDeleteButtonClickHandler = () => {
-			if (!board || !loginUser) return;
+			if (!board || !loginUser || !boardNumber || !cookies.accessToken) return;
 			if (loginUser.email !== board.writerEmail) return;
+			deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
 			navigate(MAIN_PATH());
 		}
 
@@ -132,7 +150,7 @@ export default function BoardDetail() {
 		const [comment, setComment] = useState<string>('');
 		// state: 댓글 
 		const commentRef = useRef<HTMLTextAreaElement | null>(null);
-		
+
 		// function: get favorite list response 처리 함수
 		const getFavoriteListResponse = (responseBody: GetFavoriteListResponseDto | ResponseDto | null) => {
 			if (!responseBody) return;
@@ -156,14 +174,38 @@ export default function BoardDetail() {
 			if (code === 'DBE') alert('데이터베이스 오류입니다.');
 			if (code !== 'SU') return;
 			const { commentList } = responseBody as GetCommentListResponseDto;
-			console.log(responseBody);
-			console.log(commentList);
 			setCommentList(commentList);
+		}
+		const putFavoriteResponse = (responseBody: PutFavoriteResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+			if (code === 'VF') alert('잘못된 접근입니다.');
+			if (code === 'AF') alert('인증에 실패했습니다.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+
+			if (!boardNumber) return;
+			getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
+		}
+		const postCommentResponse = (responseBody: PostCommentResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+			if (code === 'VF') alert('잘못된 접근입니다.');
+			if (code === 'AF') alert('인증에 실패했습니다.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+
+			setComment('');
+			if (!boardNumber) return;
+			getCommentListRequest(boardNumber).then(getCommentListResponse);
 		}
 
 		// event handler
 		const onFavoriteClickHandler = () => {
-			setFavorite(!isFavorite);
+			if (!loginUser || !cookies.accessToken || !boardNumber) return;
+			putFavoriteRequest(boardNumber, cookies.accessToken).then(putFavoriteResponse);
 		}
 		const onShowFavoriteClickHandler = () => {
 			setShowFavorite(!showFavorite);
@@ -172,7 +214,9 @@ export default function BoardDetail() {
 			setShowComment(!showComment);
 		}
 		const onCommentSubmitButtonClickHandler = () => {
-			if (!comment) return;
+			if (!comment || !boardNumber || !loginUser || !cookies.accessToken) return;
+			const requestBody: PostCommentRequestDto = { content: comment };
+			postCommentRequest(boardNumber, requestBody, cookies.accessToken).then(postCommentResponse);
 			alert("댓글을 성공적으로 작성했습니다.");
 		}
 		const onCommentChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -189,6 +233,21 @@ export default function BoardDetail() {
 			getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
 			getCommentListRequest(boardNumber).then(getCommentListResponse);
 		}, [boardNumber]);
+
+		// 댓글 목록을 렌더링 직전에 정렬
+		// commentList 상태가 업데이트될 때마다 이 부분은 다시 실행됩니다.
+		const sortedCommentList = [...commentList];
+		sortedCommentList.sort((a, b) => {
+			const dateA = new Date(a.writeDatetime);
+			const dateB = new Date(b.writeDatetime);
+			// 유효하지 않은 날짜 처리 (옵션)
+			if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
+				console.error("유효하지 않은 writeDatetime 형식입니다.", a.writeDatetime, b.writeDatetime);
+				// 유효하지 않은 날짜가 있으면 순서에 영향을 주지 않거나 특정 위치로 보내는 로직 추가 가능
+				return 0;
+			}
+			return dateA.getTime() - dateB.getTime(); // 오래된 날짜(작은 숫자)가 먼저 오도록 오름차순 정렬
+		});
 
 		// render
 		return (
@@ -225,7 +284,7 @@ export default function BoardDetail() {
 					<div className="board-detail-bottom-favorite-container">
 						<div className="board-detail-bottom-favorite-title">{"좋아요 "}<span className='emphasis'>{favoriteList.length}</span></div>
 						<div className="board-detail-bottom-favorite-contents">
-							{favoriteList.map(item => <FavoriteItem favoriteListItem={item} />)}
+							{favoriteList.map((item, index) => <FavoriteItem key={index} favoriteListItem={item} />)}
 						</div>
 					</div>
 				</div>
@@ -235,7 +294,7 @@ export default function BoardDetail() {
 					<div className="board-detail-bottom-comment-container">
 						<div className="board-detail-bottom-comment-title">{'댓글 '}<span className='emphasis'>{commentList.length}</span></div>
 						<div className="board-detail-bottom-comment-list-container">
-							{commentList.map(item => <CommentItem commentListItem={item} /> )}
+							{sortedCommentList.map((item, index)=> <CommentItem key={index} commentListItem={item} /> )}
 						</div>
 					</div>
 					<div className="divider"></div>

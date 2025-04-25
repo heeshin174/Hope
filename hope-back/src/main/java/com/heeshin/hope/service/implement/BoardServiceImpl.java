@@ -170,7 +170,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Long boardNumber) {
         try {
-            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            boardEntity = boardRepository.findByBoardNumber(boardNumber);
             if (boardEntity == null) return IncreaseViewCountResponseDto.noExistBoard();
             boardEntity.increaseViewCount();
             boardRepository.save(boardEntity);
@@ -180,4 +180,33 @@ public class BoardServiceImpl implements BoardService {
         }
         return IncreaseViewCountResponseDto.success();
     }
+
+    @Override
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Long boardNumber, String email) {
+        try {
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return DeleteBoardResponseDto.noExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return DeleteBoardResponseDto.noExistBoard();
+
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if (!isWriter) return DeleteBoardResponseDto.noPermission();
+
+            // 관련된 모든 값 삭제
+            imageRepository.deleteByBoardNumber(boardNumber);
+            favoriteRepository.deleteByBoardNumber(boardNumber);
+            commentRepository.deleteByBoardNumber(boardNumber);
+
+            boardRepository.delete(boardEntity);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return DeleteBoardResponseDto.success();
+    }
+
+
 }

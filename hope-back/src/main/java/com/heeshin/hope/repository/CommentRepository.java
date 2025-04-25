@@ -2,6 +2,7 @@ package com.heeshin.hope.repository;
 
 import com.heeshin.hope.entity.CommentEntity;
 import com.heeshin.hope.repository.resultSet.GetCommentListResultSet;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,4 +26,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
             nativeQuery = true
     )
     List<GetCommentListResultSet> getCommentList(Long boardNumber);
+
+    @Transactional
+    void deleteByBoardNumber(Long boardNumber);
 }
