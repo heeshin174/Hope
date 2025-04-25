@@ -14,7 +14,7 @@
 #board-detail-top {
 	display: flex;
 	flex-direction: column;
-	gap:40px;
+	gap:20px;
 }
 
 .board-detail-top-header {
@@ -115,6 +115,7 @@
 }
 
 .board-detail-main-text {
+	padding-top: 10px;
 	color: rgba(0,0,0,0.7);
 	font-size: 18px;
 	font-weight: 500;

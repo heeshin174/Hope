@@ -8,14 +8,15 @@ export default defineConfig({
   resolve: {
     alias: {
       // This makes 'components/X' resolve to '/src/components/X'
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './src'), // 앞에 'import { ... } from @/apis/...'
+      'apis': path.resolve(__dirname, './src/apis'), 
       'components': path.resolve(__dirname, './src/components'),
-      'layouts': path.resolve(__dirname, './src/layouts'),
-      'views': path.resolve(__dirname, './src/views'),
       'constant': path.resolve(__dirname, './src/constant'),
+      'layouts': path.resolve(__dirname, './src/layouts'),
+      'mocks': path.resolve(__dirname, './src/mocks'),
       'stores': path.resolve(__dirname, './src/stores'),
-      'apis': path.resolve(__dirname, './src/apis'),
-      'mocks': path.resolve(__dirname, './src/mocks')
+      'utils': path.resolve(__dirname, './src/utils'),
+      'views': path.resolve(__dirname, './src/views')
     }
   }
 });

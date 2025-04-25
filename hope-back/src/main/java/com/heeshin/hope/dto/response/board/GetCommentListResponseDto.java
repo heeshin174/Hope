@@ -13,11 +13,11 @@ import java.util.List;
 
 @Getter
 public class GetCommentListResponseDto extends ResponseDto {
-    private List<CommentListItem> commentListItemList;
+    private List<CommentListItem> commentList;
 
     private GetCommentListResponseDto(List<GetCommentListResultSet> resultSets) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
-        this.commentListItemList = CommentListItem.copyList(resultSets);
+        this.commentList = CommentListItem.copyList(resultSets);
     }
 
     public static ResponseEntity<GetCommentListResponseDto> success(List<GetCommentListResultSet> resultSets) {

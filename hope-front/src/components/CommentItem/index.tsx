@@ -1,6 +1,7 @@
 import { CommentListItem } from 'types/interface'
 import './style.css'
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
+import { getElapsedTime } from 'utils/date.util';
 
 interface Props {
   commentListItem: CommentListItem
@@ -8,8 +9,8 @@ interface Props {
 
 export default function CommentItem({commentListItem}: Props) {
   
-  // properties
-  const { nickname, profileImage, writeDatetime, content } = commentListItem
+  // state: properties
+  const { nickname, profileImage, writeDatetime, content } = commentListItem;
 
   return (
     <div className="comment-list-item">
@@ -19,7 +20,7 @@ export default function CommentItem({commentListItem}: Props) {
         </div>
         <div className="comment-list-item-nickname">{nickname}</div>
         <div className="comment-list-item-divider"></div>
-        <div className="comment-list-item-time">{writeDatetime}</div>
+        <div className="comment-list-item-time">{getElapsedTime(writeDatetime)}</div>
       </div>
       <div className="comment-list-item-main">
         <div className="comment-list-item-content">{content}</div>

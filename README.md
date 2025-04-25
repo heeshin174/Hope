@@ -32,6 +32,8 @@ See details at [Requirement](./requirement.md)
     - SpringData JPA
     - Gradle
     - Spring Security
+    - jwt
+    - h2 database (dev)
 - MySQLDB
 - Redis
 - Docker & k8s
@@ -43,6 +45,13 @@ See details at [Requirement](./requirement.md)
 ### Front-end
 
 - React:19.0.0 (typescript + SWC /w vite)
+
+`npm i axios react-cookie react-daum-postcode react-router-dom`
+
+- `dayjs`: 5분 전, 1일 전 등 시간 갭 표시
+- `react-daum-postcode`: 도로명 표시
+- `react-router-dom`: navigation
+- `axios`: REST api 
 
 ## Troubleshooting
 

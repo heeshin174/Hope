@@ -14,11 +14,11 @@ import java.util.List;
 @Getter
 public class GetFavoriteListResponseDto extends ResponseDto {
 
-    private List<FavoriteListItem> favoriteListItems;
+    private List<FavoriteListItem> favoriteList;
 
     private GetFavoriteListResponseDto(List<GetFavoriteListResultSet> resultSets) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
-        this.favoriteListItems = FavoriteListItem.copyList(resultSets);
+        this.favoriteList = FavoriteListItem.copyList(resultSets);
     }
 
     public static ResponseEntity<GetFavoriteListResponseDto> success(List<GetFavoriteListResultSet> resultSets) {

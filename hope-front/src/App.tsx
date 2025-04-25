@@ -16,6 +16,14 @@ import { GetSignInUserResponseDto } from 'apis/response/user'
 import { ResponseDto } from 'apis/response'
 import { getSignInUserRequest } from 'apis'
 import { User } from 'types/interface'
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ko';
+
+// 'dayjs' package
+// 플러그인 활성화
+dayjs.extend(relativeTime);
+dayjs.locale('ko');
 
 function App() {
 

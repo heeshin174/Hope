@@ -2,17 +2,17 @@ import FavoriteItem from 'components/FavoriteItem';
 import './style.css'
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Board, CommentListItem, FavoriteListItem } from 'types/interface';
-import { boardMock, commentListMock, favoriteListMock } from 'mocks';
+import { commentListMock } from 'mocks';
 import CommentItem from 'components/CommentItem';
 import Pagination from 'components/Pagination';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useLoginUserStore } from 'stores';
 import { BOARD_PATH, BOARD_UPDATE_PATH, MAIN_PATH, USER_PATH } from 'constant';
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
-import { getBoardRequest, increaseViewCountRequest } from 'apis';
+import { getBoardRequest, getCommentListRequest, getFavoriteListRequest, increaseViewCountRequest } from 'apis';
 import GetBoardResponseDto from 'apis/response/board/get-board.response.dto';
 import { ResponseDto } from 'apis/response';
-import { IncreaseViewCountResponseDto } from 'apis/response/board';
+import { GetCommentListResponseDto, GetFavoriteListResponseDto, IncreaseViewCountResponseDto } from 'apis/response/board';
 
 export default function BoardDetail() {
 
@@ -133,6 +133,34 @@ export default function BoardDetail() {
 		// state: 댓글 
 		const commentRef = useRef<HTMLTextAreaElement | null>(null);
 		
+		// function: get favorite list response 처리 함수
+		const getFavoriteListResponse = (responseBody: GetFavoriteListResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+			const { favoriteList } = responseBody as GetFavoriteListResponseDto;
+			setFavoriteList(favoriteList);
+			if (!loginUser) {
+				setFavorite(false);
+				return;
+			}
+			const isFavorite = favoriteList.findIndex(favorite => favorite.email === loginUser.email) !== -1;
+			setFavorite(isFavorite);
+		}
+		const getCommentListResponse = (responseBody: GetCommentListResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'NB') alert('존재하지 않는 게시물입니다.');
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+			const { commentList } = responseBody as GetCommentListResponseDto;
+			console.log(responseBody);
+			console.log(commentList);
+			setCommentList(commentList);
+		}
+
 		// event handler
 		const onFavoriteClickHandler = () => {
 			setFavorite(!isFavorite);
@@ -157,8 +185,9 @@ export default function BoardDetail() {
 
 		// effect 
 		useEffect(() => {
-			setFavoriteList(favoriteListMock);
-			setCommentList(commentListMock);
+			if (!boardNumber) return;
+			getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
+			getCommentListRequest(boardNumber).then(getCommentListResponse);
 		}, [boardNumber]);
 
 		// render
@@ -204,7 +233,7 @@ export default function BoardDetail() {
 				{showComment && 
 				<div className="board-detail-bottom-comment-box">
 					<div className="board-detail-bottom-comment-container">
-						<div className="board-detail-bottom-comment-title">{'댓글'}<span className='emphasis'>{commentList.length}</span></div>
+						<div className="board-detail-bottom-comment-title">{'댓글 '}<span className='emphasis'>{commentList.length}</span></div>
 						<div className="board-detail-bottom-comment-list-container">
 							{commentList.map(item => <CommentItem commentListItem={item} /> )}
 						</div>
@@ -213,14 +242,16 @@ export default function BoardDetail() {
 					<div className="board-detail-bottom-comment-pagination-box">
 						<Pagination />
 					</div>
-					<div className="board-detail-bottom-comment-input-box">
-						<div className="board-detail-bottom-comment-input-container">
-								<textarea ref={commentRef} className="board-detail-bottom-comment-textarea" placeholder='댓글을 작성해주세요.' value={comment} onChange={onCommentChangeHandler} />
-							<div className="board-detail-bottom-comment-button-box">
-								<div className={comment === '' ? 'disable-button' : 'black-button'} onClick={onCommentSubmitButtonClickHandler}>{'댓글달기'}</div>
+					{loginUser !== null && 
+						<div className="board-detail-bottom-comment-input-box">
+							<div className="board-detail-bottom-comment-input-container">
+									<textarea ref={commentRef} className="board-detail-bottom-comment-textarea" placeholder='댓글을 작성해주세요.' value={comment} onChange={onCommentChangeHandler} />
+								<div className="board-detail-bottom-comment-button-box">
+									<div className={comment === '' ? 'disable-button' : 'black-button'} onClick={onCommentSubmitButtonClickHandler}>{'댓글달기'}</div>
+								</div>
 							</div>
 						</div>
-					</div>
+					}
 				</div>
 				}
 			</div>
