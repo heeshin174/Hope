@@ -17,6 +17,13 @@
 	line-height: 140%;
 }
 
+.pagination-back {
+	cursor: pointer;
+}
+.pagination-next {
+	cursor: pointer;
+}
+
 .pagination-divider {
 	color: rgba(0,0,0,0.1);
 	font-size: 14px;

@@ -1,3 +1,3 @@
-import usePagination from './paginatoin.hook';
+import usePagination from './pagination.hook';
 
 export { usePagination }

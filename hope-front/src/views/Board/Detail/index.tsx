@@ -32,6 +32,23 @@ export default function BoardDetail() {
 		if (code === 'DBE') alert('데이터베이스 오류입니다.');
 	}
 
+	// effect: 게시물 번호 path variable이 바뀔 때 마다 조회수 증가
+	// 여기서는 조회수 증가는 게시물 로드 후 딱 한 번만 일어나야 하므로,
+	// 게시물 로드 이펙트 내부나 별도의 마운트 감지 로직으로 통합하는 것이 좋습니다.
+    // 임시로 effectFlag 대신 마운트 시점만 감지하는 useRef 방식으로 변경합니다.
+    const mounted = useRef(false);
+    useEffect(() => {
+        if (!boardNumber) {
+            navigate(MAIN_PATH());
+            return;
+        }
+        // 마운트 시에만 조회수 증가 API 호출
+        if (!mounted.current) {
+            mounted.current = true;
+            increaseViewCountRequest(boardNumber).then(increaseViewCountResponse);
+        }
+    }, [boardNumber, navigate]);
+
 	const BoardDetailTop = () => {
 
 		// state
@@ -61,7 +78,7 @@ export default function BoardDetail() {
 			setWriter(isWriter);
 		}
 
-		// functoin: delete board response 처리 함수
+		// function: delete board response 처리 함수
 		const deleteBoardResponse = (responseBody: DeleteBoardResponseDto | ResponseDto | null) => {
 			if (!responseBody) return;
 			const { code } = responseBody;
@@ -73,7 +90,6 @@ export default function BoardDetail() {
 			if (code !== 'SU') return;
 			alert('게시물이 성공적으로 삭제되었습니다.');
 			navigate(MAIN_PATH());
-			return;
 		}
 
 		// event handler
@@ -93,7 +109,6 @@ export default function BoardDetail() {
 			if (!board || !loginUser || !boardNumber || !cookies.accessToken) return;
 			if (loginUser.email !== board.writerEmail) return;
 			deleteBoardRequest(boardNumber, cookies.accessToken).then(deleteBoardResponse);
-			navigate(MAIN_PATH());
 		}
 
 		// effect: 게시물 번호 path variable이 바뀔 때 마다 게시물 불러오기
@@ -103,7 +118,7 @@ export default function BoardDetail() {
 				return;
 			}
 			getBoardRequest(boardNumber).then(getBoardResponse);
-		}, [boardNumber]);
+		}, [boardNumber, navigate]);
 
 		if (!board) return <></>
 		return (
@@ -134,7 +149,7 @@ export default function BoardDetail() {
 				<div className="divider"></div>
 				<div className="board-detail-top-main">
 					<div className="board-detail-main-text">{board.content}</div>
-					{board.boardImageList.map(image => <img className="board-detail-main-image" src={image} />)}
+					{board.boardImageList.map((image, index) => <img key={index} className="board-detail-main-image" src={image} />)}
 				</div>
 			</div>
 		)
@@ -151,7 +166,25 @@ export default function BoardDetail() {
 		const [totalCommentCount, setTotalCommentCount] = useState<number>(0);
 		// state: 댓글 참조
 		const commentRef = useRef<HTMLTextAreaElement | null>(null);
-		const { currentPage,setCurrentPage,currentSection,setCurrentSection,viewList,viewPageList,totalSection,setTotalList } = usePagination<CommentListItem>(3);
+		
+		// hook: usePagination hook
+		// 한 페이지에 3개 댓글, 한 섹션에 5개 페이지 표시 예시
+		const {
+			viewList: commentList, // 훅에서 viewList를 댓글 목록으로 사용
+			currentPage,
+			totalPage, 
+			currentSection,
+			totalSection, 
+			viewPageList,
+			setTotalList: setTotalCommentList, // 훅의 setTotalList 함수를 댓글 목록 설정 함수로 사용
+			// 훅에서 반환하는 네비게이션 함수들
+			goToPage,
+			nextPage,
+			prevPage,
+			goToSection,
+			nextSection,
+			prevSection,
+		} = usePagination<CommentListItem>(3, 5); // itemsPerPage=3, pagesPerSection=5
 
 		// function: get favorite list response 처리 함수
 		const getFavoriteListResponse = (responseBody: GetFavoriteListResponseDto | ResponseDto | null) => {
@@ -176,7 +209,7 @@ export default function BoardDetail() {
 			if (code === 'DBE') alert('데이터베이스 오류입니다.');
 			if (code !== 'SU') return;
 			const { commentList } = responseBody as GetCommentListResponseDto;
-			setTotalList(commentList);
+			setTotalCommentList(commentList);
 			setTotalCommentCount(commentList.length);
 		}
 		const putFavoriteResponse = (responseBody: PutFavoriteResponseDto | ResponseDto | null) => {
@@ -199,7 +232,7 @@ export default function BoardDetail() {
 			if (code === 'AF') alert('인증에 실패했습니다.');
 			if (code === 'DBE') alert('데이터베이스 오류입니다.');
 			if (code !== 'SU') return;
-
+			alert("댓글을 성공적으로 작성했습니다.");
 			setComment('');
 			if (!boardNumber) return;
 			getCommentListRequest(boardNumber).then(getCommentListResponse);
@@ -220,7 +253,6 @@ export default function BoardDetail() {
 			if (!comment || !boardNumber || !loginUser || !cookies.accessToken) return;
 			const requestBody: PostCommentRequestDto = { content: comment };
 			postCommentRequest(boardNumber, requestBody, cookies.accessToken).then(postCommentResponse);
-			alert("댓글을 성공적으로 작성했습니다.");
 		}
 		const onCommentChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 			const { value } = e.target;
@@ -236,21 +268,6 @@ export default function BoardDetail() {
 			getFavoriteListRequest(boardNumber).then(getFavoriteListResponse);
 			getCommentListRequest(boardNumber).then(getCommentListResponse);
 		}, [boardNumber]);
-
-		// 댓글 목록을 렌더링 직전에 정렬
-		// commentList 상태가 업데이트될 때마다 이 부분은 다시 실행됩니다.
-		const sortedCommentList = [...viewList];
-		sortedCommentList.sort((a, b) => {
-			const dateA = new Date(a.writeDatetime);
-			const dateB = new Date(b.writeDatetime);
-			// 유효하지 않은 날짜 처리 (옵션)
-			if (isNaN(dateA.getTime()) || isNaN(dateB.getTime())) {
-				console.error("유효하지 않은 writeDatetime 형식입니다.", a.writeDatetime, b.writeDatetime);
-				// 유효하지 않은 날짜가 있으면 순서에 영향을 주지 않거나 특정 위치로 보내는 로직 추가 가능
-				return 0;
-			}
-			return dateA.getTime() - dateB.getTime(); // 오래된 날짜(작은 숫자)가 먼저 오도록 오름차순 정렬
-		});
 
 		// render
 		return (
@@ -297,19 +314,24 @@ export default function BoardDetail() {
 					<div className="board-detail-bottom-comment-container">
 						<div className="board-detail-bottom-comment-title">{'댓글 '}<span className='emphasis'>{totalCommentCount}</span></div>
 						<div className="board-detail-bottom-comment-list-container">
-							{sortedCommentList.map((item, index)=> <CommentItem key={index} commentListItem={item} /> )}
+							{commentList.map((item, index)=> <CommentItem key={index} commentListItem={item} /> )}
 						</div>
 					</div>
 					<div className="divider"></div>
 					<div className="board-detail-bottom-comment-pagination-box">
-						<Pagination
-							currentPage={currentPage}
-							currentSection={currentSection}
-							setCurrentPage={setCurrentPage}
-							setCurrentSection={setCurrentSection}
-							viewPageList={viewPageList}
-							totalSection={totalSection}
-						/>
+							<Pagination
+								currentPage={currentPage}
+								totalPage={totalPage}
+								currentSection={currentSection}
+								totalSection={totalSection}
+								viewPageList={viewPageList}
+								goToPage={goToPage}
+								nextPage={nextPage}
+								prevPage={prevPage}
+								goToSection={goToSection}
+								nextSection={nextSection}
+								prevSection={prevSection}
+							/>
 					</div>
 					{loginUser !== null && 
 						<div className="board-detail-bottom-comment-input-box">
@@ -326,18 +348,6 @@ export default function BoardDetail() {
 			</div>
 		);
 	};
-
-	// effect
-	let effectFlag = true;
-	useEffect(() => {
-		if (!boardNumber) return;
-		if (effectFlag) {
-			effectFlag = false;
-			return;
-		}
-		increaseViewCountRequest(boardNumber).then(increaseViewCountResponse);
-	}, [boardNumber])
-
 
 	return (
 		<div id="board-detail-wrapper">
