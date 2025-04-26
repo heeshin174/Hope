@@ -11,7 +11,7 @@ import { ResponseDto } from 'apis/response';
 
 export default function Header() {
 	// state: 로그인 유저 상태
-	const { loginUser, setLoginUser, resetLoginUser } = useLoginUserStore();
+	const { loginUser, resetLoginUser } = useLoginUserStore();
 	// state: path 상태
 	const { pathname } = useLocation();
 

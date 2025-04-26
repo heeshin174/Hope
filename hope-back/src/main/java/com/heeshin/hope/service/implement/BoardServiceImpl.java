@@ -3,19 +3,15 @@ package com.heeshin.hope.service.implement;
 import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
 import com.heeshin.hope.dto.response.board.*;
-import com.heeshin.hope.entity.BoardEntity;
+import com.heeshin.hope.entity.*;
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
-import com.heeshin.hope.entity.CommentEntity;
-import com.heeshin.hope.entity.FavoriteEntity;
-import com.heeshin.hope.entity.ImageEntity;
 import com.heeshin.hope.repository.*;
 import com.heeshin.hope.repository.resultSet.GetBoardResultSet;
 import com.heeshin.hope.repository.resultSet.GetCommentListResultSet;
 import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
 import com.heeshin.hope.service.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +27,8 @@ public class BoardServiceImpl implements BoardService {
     private final ImageRepository imageRepository;
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
+    private final BoardListViewRepository boardListViewRepository;
+
     private BoardEntity boardEntity;
 
     @Override
@@ -137,6 +135,19 @@ public class BoardServiceImpl implements BoardService {
             throw new RuntimeException(e);
         }
         return GetCommentListResponseDto.success(resultSets);
+    }
+
+    @Override
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+        List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+        try {
+            boardListViewEntities = boardListViewRepository.findByOrderByWriteDatetimeDesc();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetLatestBoardListResponseDto.success(boardListViewEntities);
     }
 
     @Override
