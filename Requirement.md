@@ -40,14 +40,15 @@
 
 ### Board
 
-#### 게시물 등록
-
-`POST /api/v1/board/{boardNumber}`
-
-
 #### 게시물 조회
 
 `GET /api/v1/board/{boardNumber}`
+
+**Header**
+
+**Request**
+
+**Response**
 
 ```
 {
@@ -63,6 +64,190 @@
     "writerEmail": "email@email.com",
     "writerNickname": "nickname3213",
     "writerProfileImage": null
+}
+```
+
+#### 게시물 등록
+
+`POST /api/v1/board/{boardNumber}`
+
+**Header**
+
+```
+name         | value
+---            ---
+Authrization | Bearer Token 
+```
+
+**Request**
+
+{
+  "title": "제 첫 게시물입니다.",
+  "content": "제 첫 게시물입니다. 많이 부족합니다. \n",
+  "boardImageList": [
+    "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+  ]
+}
+
+**Response**
+
+Fail
+
+1. 유효성 검사 실패
+
+```
+Http Status: 400 (Bad Request)
+{
+  "code": "VF",
+  "message": "Validation failed"
+}
+```
+
+2. 존재하지 않는 게시물
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NB",
+  "message": "This board does not exist."
+}
+```
+
+3. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+4. 인증 실패
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "AF",
+  "message": "Authorization Failed"
+}
+```
+
+5. 권한 없음
+
+```
+Http Status: 403 (Forbidden)
+{
+  "code": "NP",
+  "message": "Do not have Permission"
+}
+```
+
+6. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```
+
+#### 게시물 수정
+
+`PATCH /api/v1/board/{boardNumber}`
+
+**Header**
+
+```
+name         | value
+---            ---
+Authrization | Bearer Token 
+```
+
+**Request**
+
+```
+{
+  "title": "제 첫 게시물입니다.",
+  "content": "제 첫 게시물입니다. 많이 부족합니다. \n",
+  "boardImageList": [
+    "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+  ]
+}
+```
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success"
+}
+```
+
+Fail
+
+1. 유효성 검사 실패
+
+```
+Http Status: 400 (Bad Request)
+{
+  "code": "VF",
+  "message": "Validation failed"
+}
+```
+
+2. 존재하지 않는 게시물
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NB",
+  "message": "This board does not exist."
+}
+```
+
+3. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+4. 인증 실패
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "AF",
+  "message": "Authorization Failed"
+}
+```
+
+5. 권한 없음
+
+```
+Http Status: 403 (Forbidden)
+{
+  "code": "NP",
+  "message": "Do not have Permission"
+}
+```
+
+6. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
 }
 ```
 
@@ -145,7 +330,7 @@ Http Status: 403 (Forbidden)
 }
 ```
 
-5. 데이터베이스 오류
+6. 데이터베이스 오류
 
 ```
 Http Status: 500 (Internal Server Error)
@@ -155,7 +340,7 @@ Http Status: 500 (Internal Server Error)
 }
 ```
 
-
+### Favorite
 
 #### 좋아요 기능
 

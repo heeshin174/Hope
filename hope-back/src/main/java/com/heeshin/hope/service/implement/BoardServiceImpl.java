@@ -1,5 +1,6 @@
 package com.heeshin.hope.service.implement;
 
+import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
 import com.heeshin.hope.dto.response.board.*;
 import com.heeshin.hope.entity.BoardEntity;
@@ -14,6 +15,7 @@ import com.heeshin.hope.repository.resultSet.GetCommentListResultSet;
 import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
 import com.heeshin.hope.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
     public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {
         try {
             boolean existedEmail = userRepository.existsByEmail(email);
-            if (!existedEmail) return PostBoardResponseDto.notExistUser();
+            if (!existedEmail) return PostBoardResponseDto.noExistUser();
 
             // BoardEntity 생성 및 저장
             // 요청 DTO와 사용자 이메일을 이용해 BoardEntity 객체 생성
@@ -165,6 +167,39 @@ public class BoardServiceImpl implements BoardService {
             return ResponseDto.databaseError();
         }
         return PutFavoriteResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Long boardNumber, String email) {
+        try {
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return PatchBoardResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PatchBoardResponseDto.noExistUser();
+
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if (!isWriter) return PatchBoardResponseDto.noPermission();
+
+            boardEntity.patchBoard(dto);
+            boardRepository.save(boardEntity);
+
+            imageRepository.deleteByBoardNumber(boardNumber);
+            List<String> boardImageList = dto.getBoardImageList();
+            List<ImageEntity> imageEntities = new ArrayList<>();
+
+            for (String image: boardImageList) {
+                ImageEntity imageEntity = new ImageEntity(boardNumber, image);
+                imageEntities.add(imageEntity);
+            }
+            imageRepository.saveAll(imageEntities);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return PatchBoardResponseDto.success();
     }
 
     @Override

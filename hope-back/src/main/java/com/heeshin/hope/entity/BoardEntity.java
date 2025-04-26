@@ -1,5 +1,6 @@
 package com.heeshin.hope.entity;
 
+import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
 import com.heeshin.hope.util.DateTimeUtils;
 import jakarta.persistence.*;
@@ -53,5 +54,10 @@ public class BoardEntity {
     }
     public void decreaseCommentCount() {
         this.commentCount--;
+    }
+
+    public void patchBoard(PatchBoardRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
     }
 }

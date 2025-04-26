@@ -1,5 +1,6 @@
 package com.heeshin.hope.controller;
 
+import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
 import com.heeshin.hope.dto.response.board.*;
@@ -50,6 +51,12 @@ public class BoardController {
     @PutMapping("/{boardNumber}/favorite")
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Long boardNumber, @AuthenticationPrincipal String email) {
         ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, email);
+        return response;
+    }
+
+    @PatchMapping("/{boardNumber}")
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(@RequestBody @Valid PatchBoardRequestDto requestBody, @PathVariable("boardNumber") Long boardNumber, @AuthenticationPrincipal String email) {
+        ResponseEntity<? super PatchBoardResponseDto> response = boardService.patchBoard(requestBody, boardNumber, email);
         return response;
     }
 

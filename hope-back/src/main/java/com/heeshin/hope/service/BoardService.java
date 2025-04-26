@@ -1,5 +1,6 @@
 package com.heeshin.hope.service;
 
+import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
 import com.heeshin.hope.dto.response.board.*;
@@ -12,6 +13,7 @@ public interface BoardService {
     ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
     ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Long boardNumber, String email);
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Long boardNumber, String email);
+    ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Long boardNumber, String email);
     ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Long boardNumber);
     ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Long boardNumber, String email);
 }
