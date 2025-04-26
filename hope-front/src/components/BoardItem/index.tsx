@@ -17,12 +17,12 @@ export default function BoardItem({ boardListItem }: BoardListItemProps) {
     const { writeDatetime, writerNickname, writerProfileImage } = boardListItem;
 
     // function: navigate
-    // const navigator = useNavigate();
+    // const navigate = useNavigate();
 
     // event handler
     const onClickHandler = () => {
-        // navigator(`/board/${boardNumber}`);
-        // navigator(boardNumber);
+        // navigate(`/board/${boardNumber}`);
+        // navigate(boardNumber);
     }
 
     return (

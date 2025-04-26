@@ -91,6 +91,15 @@ Authrization | Bearer Token
 
 **Response**
 
+Success 
+
+```
+{
+    "code": "SU",
+    "message": "Success"
+}
+```
+
 Fail
 
 1. 유효성 검사 실패
@@ -103,17 +112,7 @@ Http Status: 400 (Bad Request)
 }
 ```
 
-2. 존재하지 않는 게시물
-
-```
-Http Status: 401 (Unauthorized)
-{
-  "code": "NB",
-  "message": "This board does not exist."
-}
-```
-
-3. 존재하지 않는 유저
+2. 존재하지 않는 유저
 
 ```
 Http Status: 401 (Unauthorized)
@@ -123,7 +122,7 @@ Http Status: 401 (Unauthorized)
 }
 ```
 
-4. 인증 실패
+3. 인증 실패
 
 ```
 Http Status: 401 (Unauthorized)
@@ -133,17 +132,7 @@ Http Status: 401 (Unauthorized)
 }
 ```
 
-5. 권한 없음
-
-```
-Http Status: 403 (Forbidden)
-{
-  "code": "NP",
-  "message": "Do not have Permission"
-}
-```
-
-6. 데이터베이스 오류
+4. 데이터베이스 오류
 
 ```
 Http Status: 500 (Internal Server Error)

@@ -17,8 +17,8 @@ export default function Authentication() {
 	// state: 쿠키 상태
 	const [cookies, setCookies] = useCookies();
 
-	// function: navigator 함수
-	const navigator = useNavigate();
+	// function: navigate 함수
+	const navigate = useNavigate();
 
 	// component: sign in card
 	const SignInCard = () => {
@@ -48,7 +48,7 @@ export default function Authentication() {
 			const expires = new Date(now + expirationTime * 1000); 
 
 			setCookies('accessToken', token, { expires, path: MAIN_PATH() });
-			navigator(MAIN_PATH());
+			navigate(MAIN_PATH());
 		}
 
 		// event handler: email 변경 이벤트
