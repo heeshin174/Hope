@@ -1,6 +1,5 @@
 import './style.css'
 
-
 // interface: pagination component properties (훅에서 받는 값들)
 interface Props {
 	currentPage: number;

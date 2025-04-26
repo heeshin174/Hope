@@ -1,7 +1,7 @@
 import { CommentListItem } from 'types/interface'
 import './style.css'
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
-import { getElapsedTime } from 'utils/date.util';
+import { getElapsedTime } from 'utils';
 
 interface Props {
   commentListItem: CommentListItem
