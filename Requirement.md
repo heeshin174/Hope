@@ -746,3 +746,26 @@ Http Status: 500 (Internal Server Error)
   "message": "Database error"
 }
 ```
+
+### Search 
+
+#### 인기 검색어 리스트
+
+`GET /api/v1/search/popular-list`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "popularWordList": ["아침", "점심", "저녁" ]
+}
+```
