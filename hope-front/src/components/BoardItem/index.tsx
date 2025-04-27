@@ -2,11 +2,11 @@ import "./style.css";
 import { BoardListItem } from "types/interface";
 import { useNavigate } from "react-router-dom";
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
+import { BOARD_DETAIL_PATH, BOARD_PATH } from 'constant';
 
 interface BoardListItemProps {
     boardListItem: BoardListItem;
 }
-
 
 // Board List Item Component
 export default function BoardItem({ boardListItem }: BoardListItemProps) {
@@ -17,12 +17,11 @@ export default function BoardItem({ boardListItem }: BoardListItemProps) {
     const { writeDatetime, writerNickname, writerProfileImage } = boardListItem;
 
     // function: navigate
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // event handler
     const onClickHandler = () => {
-        // navigate(`/board/${boardNumber}`);
-        // navigate(boardNumber);
+        navigate(BOARD_PATH() + '/' + BOARD_DETAIL_PATH(boardNumber));
     }
 
     return (

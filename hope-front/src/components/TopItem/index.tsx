@@ -2,13 +2,14 @@ import { BoardListItem } from 'types/interface';
 import './style.css'
 import { useNavigate } from 'react-router-dom';
 import defaultProfileImage from '@/assets/images/default-profile-image.jpg';
+import { BOARD_DETAIL_PATH, BOARD_PATH } from 'constant';
 
 
 interface Props {
-    topListItem: BoardListItem;
+    top3ListItem: BoardListItem;
 }
 
-export default function TopItem({ topListItem }: Props) {
+export default function Top3Item({ top3ListItem: topListItem }: Props) {
    
     // properties
     const { boardNumber, title, content, boardTitleImage } = topListItem;
@@ -16,12 +17,11 @@ export default function TopItem({ topListItem }: Props) {
     const { writeDatetime, writerNickname, writerProfileImage } = topListItem;
 
     // function: navigate
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     // event handler
     const onClickHandler = () => {
-        // navigate(`/board/${boardNumber}`);
-        // navigate(boardNumber);
+        navigate(BOARD_PATH() + '/' + BOARD_DETAIL_PATH(boardNumber));
     }
     
     return (
