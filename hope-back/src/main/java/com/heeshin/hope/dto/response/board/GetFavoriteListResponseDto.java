@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 public class GetFavoriteListResponseDto extends ResponseDto {
 
-    private List<FavoriteListItem> favoriteList;
+    private final List<FavoriteListItem> favoriteList;
 
     private GetFavoriteListResponseDto(List<GetFavoriteListResultSet> resultSets) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);

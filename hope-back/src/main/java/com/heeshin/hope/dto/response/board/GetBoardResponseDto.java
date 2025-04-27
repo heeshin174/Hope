@@ -15,14 +15,14 @@ import java.util.List;
 @Getter
 public class GetBoardResponseDto extends ResponseDto {
 
-    private Long boardNumber;
-    private String title;
-    private String content;
-    private List<String> boardImageList;
-    private String writeDatetime;
-    private String writerEmail;
-    private String writerNickname;
-    private String writerProfileImage;
+    private final Long boardNumber;
+    private final String title;
+    private final String content;
+    private final List<String> boardImageList;
+    private final String writeDatetime;
+    private final String writerEmail;
+    private final String writerNickname;
+    private final String writerProfileImage;
 
     private GetBoardResponseDto(GetBoardResultSet resultSet, List<ImageEntity> imageEntities) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);

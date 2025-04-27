@@ -402,6 +402,76 @@ Http Status: 500 (Internal Server Error)
 }
 ```
 
+#### 주간 상위 3개 게시물 리스트 
+
+`GET /api/v1/board/top-3`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "topList": [
+    {
+      "boardNumber": 1,
+      "title": "제목입니다.",
+      "content": "제 첫 게시물입니다. 많이 부족합니다. \n",
+      "boardImageList": [
+          "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+      ],
+      "writeDatetime": null,
+      "writerEmail": "email@email.com",
+      "writerNickname": "nickname3213",
+      "writerProfileImage": null
+    },
+    {
+      "boardNumber": 2,
+      "title": "제목입니다2.",
+      "content": "제 두번째 게시물입니다. 많이 부족합니다. \n",
+      "boardImageList": [
+          "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+      ],
+      "writeDatetime": null,
+      "writerEmail": "email@email.com",
+      "writerNickname": "nickname3213",
+      "writerProfileImage": null
+    },
+    {
+      "boardNumber": 3,
+      "title": "제목입니다3.",
+      "content": "제 두번째 게시물입니다. 많이 부족합니다. \n",
+      "boardImageList": [
+          "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+      ],
+      "writeDatetime": null,
+      "writerEmail": "email@email.com",
+      "writerNickname": "nickname3213",
+      "writerProfileImage": null
+    }
+  ]
+}
+```
+
+Fail
+
+1. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```
+
 ### Favorite
 
 #### 좋아요 기능

@@ -2,6 +2,7 @@ package com.heeshin.hope.util;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 // final class: 상속 방지
 // private constructor: 인스턴스화 방지 (유틸리티 클래스이므로)
@@ -24,5 +25,24 @@ public final class DateTimeUtils {
     public static String getCurrentDateTimeString() {
         LocalDateTime now = LocalDateTime.now(); // 현재 날짜/시간 가져오기 (java.time 사용)
         return now.format(DATE_TIME_FORMATTER);   // 정의된 포맷으로 변환
+    }
+
+    /**
+     * 현재 시간에서 특정 기간을 뺀 날짜와 시간을 "yyyy-MM-dd HH:mm:ss" 형식의 문자열로 반환합니다.
+     * @param amountToSubtract 뺄 기간의 양
+     * @param unit ChronoUnit (DAYS, HOURS, MINUTES 등)
+     * @return 포맷팅된 과거 날짜/시간 문자열
+     */
+    public static String getPastDateTimeString(long amountToSubtract, ChronoUnit unit) {
+        LocalDateTime pastDateTime = LocalDateTime.now().minus(amountToSubtract, unit);
+        return pastDateTime.format(DATE_TIME_FORMATTER);
+    }
+
+    /**
+     * 현재 시간에서 일주일 전의 날짜와 시간을 "yyyy-MM-dd HH:mm:ss" 형식의 문자열로 반환합니다.
+     * @return 포맷팅된 일주일 전 날짜/시간 문자열
+     */
+    public static String getBeforeWeekDateTimeString() {
+        return getPastDateTimeString(7, ChronoUnit.DAYS);
     }
 }

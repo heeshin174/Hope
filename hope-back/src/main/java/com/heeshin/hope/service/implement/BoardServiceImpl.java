@@ -11,6 +11,7 @@ import com.heeshin.hope.repository.resultSet.GetBoardResultSet;
 import com.heeshin.hope.repository.resultSet.GetCommentListResultSet;
 import com.heeshin.hope.repository.resultSet.GetFavoriteListResultSet;
 import com.heeshin.hope.service.BoardService;
+import com.heeshin.hope.util.DateTimeUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -148,6 +149,21 @@ public class BoardServiceImpl implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetLatestBoardListResponseDto.success(boardListViewEntities);
+    }
+
+    @Override
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
+        List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+        try {
+            // 일주일 전 날짜
+            String oneWeekAgoString = DateTimeUtils.getBeforeWeekDateTimeString();
+            boardListViewEntities = boardListViewRepository.findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(oneWeekAgoString);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetTop3BoardListResponseDto.success(boardListViewEntities);
     }
 
     @Override

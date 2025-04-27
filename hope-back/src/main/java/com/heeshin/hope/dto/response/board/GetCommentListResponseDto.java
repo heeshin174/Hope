@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 public class GetCommentListResponseDto extends ResponseDto {
-    private List<CommentListItem> commentList;
+    private final List<CommentListItem> commentList;
 
     private GetCommentListResponseDto(List<GetCommentListResultSet> resultSets) {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
