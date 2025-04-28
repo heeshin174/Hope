@@ -4,8 +4,8 @@ import { SignInResponseDto, SignUpResponseDto } from './response/auth';
 import { ResponseDto } from './response';
 import { GetSignInUserResponseDto } from './response/user';
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './request/board';
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto } from './response/board';
-import { GetPopularListResponseDto } from './response/search';
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto } from './response/board';
+import { GetPopularListResponseDto, GetRelationListResponseDto } from './response/search';
 
 // --- 기본 설정 ---
 const DOMAIN = 'http://localhost:8080';
@@ -98,6 +98,8 @@ const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/b
 const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
 const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`;
 const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
+const GET_SEARCH_BOARD_LIST_URL = (searchWord: string, preSearchWord: string | null) => `${API_DOMAIN}/board/search-list/${searchWord}${preSearchWord ? '/' + preSearchWord : ''}`;
+const GET_RELATION_LIST_URL = (searchWord: string) => `${API_DOMAIN}/search/${searchWord}/relation-list`;
 const FILE_UPLOAD_URL = () => `${FILE_DOMAIN}/upload`;
 
 // API 요청 함수들 
@@ -130,6 +132,12 @@ export const getLatestBoardListRequest = () =>
 
 export const getTop3BoardListRequest = () => 
      apiRequester<GetTop3BoardListResponseDto>('get', GET_TOP_3_BOARD_LIST_URL());
+
+export const getSearchBoardListRequest = (searchWord: string, preSearchWord: string | null) =>
+    apiRequester<GetSearchBoardListResponseDto>('get', GET_SEARCH_BOARD_LIST_URL(searchWord, preSearchWord));
+
+export const getRelationListRequest = (searchWord: string) =>
+    apiRequester<GetRelationListResponseDto>('get', GET_RELATION_LIST_URL(searchWord));
 
 // Comment & Favorite & View Count
 export const postCommentRequest = (boardNumber: number | string, requestBody: PostCommentRequestDto, accessToken: string) =>
