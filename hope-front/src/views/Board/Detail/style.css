@@ -169,10 +169,6 @@
 	line-height: 140%;
 }
 
-.emphasis {
-	font-weight: bolder;
-}
-
 .board-detail-bottom-favorite-contents {
 	display: flex;
 	flex-wrap: wrap;
