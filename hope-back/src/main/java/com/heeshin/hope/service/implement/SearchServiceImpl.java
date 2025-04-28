@@ -2,8 +2,10 @@ package com.heeshin.hope.service.implement;
 
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.response.saerch.GetPopularListResponseDto;
+import com.heeshin.hope.dto.response.saerch.GetRelationListResponseDto;
 import com.heeshin.hope.repository.SearchLogRepository;
 import com.heeshin.hope.repository.resultSet.GetPopularListResultSet;
+import com.heeshin.hope.repository.resultSet.GetRelationListResultSet;
 import com.heeshin.hope.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,6 +29,17 @@ public class SearchServiceImpl implements SearchService {
         try {
             List<GetPopularListResultSet> resultSets = searchLogRepository.getPopularList();
             return GetPopularListResponseDto.success(resultSets);
+        } catch (Exception e) {
+            LOGGER.error("Error fetching popular search list", e);
+            return ResponseDto.databaseError();
+        }
+    }
+
+    @Override
+    public ResponseEntity<? super GetRelationListResponseDto> getRelationsList(String searchWord) {
+        try {
+            List<GetRelationListResultSet> resultSets = searchLogRepository.getRelationList(searchWord);
+            return GetRelationListResponseDto.success(resultSets);
         } catch (Exception e) {
             LOGGER.error("Error fetching popular search list", e);
             return ResponseDto.databaseError();
