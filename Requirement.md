@@ -828,3 +828,35 @@ Http Status: 500 (Internal Server Error)
   "message": "Database error"
 }
 ```
+
+#### 관련 검색어 리스트
+
+`GET /api/v1/search/{searchWord}/relation-list`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "relativeWordList": ["리엑트", "리액트네이티브"]
+}
+```
+
+Fail
+
+1. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
