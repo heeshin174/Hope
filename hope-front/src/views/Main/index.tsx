@@ -5,11 +5,12 @@ import { useEffect, useState } from 'react';
 import BoardItem from 'components/BoardItem';
 import { useNavigate } from 'react-router-dom';
 import { SEARCH_PATH } from 'constant';
-import { getLatestBoardListRequest, getTop3BoardListRequest } from 'apis';
+import { getLatestBoardListRequest, getTop3BoardListRequest, getPopularListRequest } from 'apis';
 import { GetLatestBoardListResponseDto, GetTop3BoardListResponseDto } from 'apis/response/board';
 import { ResponseDto } from 'apis/response';
 import { usePagination } from 'hooks';
 import Pagination from 'components/Pagination';
+import { GetPopularListResponseDto } from 'apis/response/search';
 
 export default function Main() {
 
@@ -87,8 +88,14 @@ export default function Main() {
 			const { latestList } = responseBody as GetLatestBoardListResponseDto;
 			setTotalList(latestList);
 		}
-		const getPopularWordListResponse = (responseBody: GetLatestBoardListResponseDto | ResponseDto | null) => {
+		const getPopularWordListResponse = (responseBody: GetPopularListResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
 			
+			const { popularWordList } = responseBody as GetPopularListResponseDto;
+			setPopularWordList(popularWordList);
 		}
 
 		// event handler: 인기 검색어 클릭 시 해당 검색어로 게시물 검색하기
@@ -99,7 +106,7 @@ export default function Main() {
 		// effect: 컴포넌트 마운트 시 주간 top3 게시물 리스트 가져오기
 		useEffect(() => { 
 			getLatestBoardListRequest().then(getLatestBoardListResponse);
-			setPopularWordList(['자바스크립트', '리액트', '타입스크립트', '프론트엔드', '백엔드']);
+			getPopularListRequest().then(getPopularWordListResponse);
 		}, []);
 
 		return (

@@ -148,7 +148,7 @@ export const putFavoriteRequest = (boardNumber: number | string, accessToken: st
     apiRequester<PutFavoriteResponseDto>('put', PUT_FAVORITE_URL(boardNumber), {}, accessToken); // PUT 요청 시 빈 객체 {} 전달
 
 // search
-export const getPopularListReqeust = () => 
+export const getPopularListRequest = () => 
     apiRequester<GetPopularListResponseDto>('get', GET_POPULAR_LIST_URL());
 
 // File

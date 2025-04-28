@@ -769,3 +769,62 @@ Http Status: 200
   "popularWordList": ["아침", "점심", "저녁" ]
 }
 ```
+
+#### 검색 게시물 리스트
+
+`GET /api/v1/board/search-list/{searchWord}`
+`GET /api/v1/board/search-list/{searchWord}/{preSearchWord}`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "searchList": [
+    {
+      "boardNumber": 1,
+      "title": "제목입니다.",
+      "content": "제 첫 게시물입니다. 많이 부족합니다. \n",
+      "boardImageList": [
+          "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+      ],
+      "writeDatetime": null,
+      "writerEmail": "email@email.com",
+      "writerNickname": "nickname3213",
+      "writerProfileImage": null
+    },
+    {
+      "boardNumber": 2,
+      "title": "제목입니다2.",
+      "content": "제 두번째 게시물입니다. 많이 부족합니다. \n",
+      "boardImageList": [
+          "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+      ],
+      "writeDatetime": null,
+      "writerEmail": "email@email.com",
+      "writerNickname": "nickname3213",
+      "writerProfileImage": null
+    }
+  ]
+}
+```
+
+Fail
+
+1. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```
