@@ -184,7 +184,7 @@ export default function BoardDetail() {
 			goToSection,
 			nextSection,
 			prevSection,
-		} = usePagination<CommentListItem>(3, 5); // itemsPerPage=3, pagesPerSection=5
+		} = usePagination<CommentListItem>(3, 5, 'asc'); // itemsPerPage=3, pagesPerSection=5, ascending 정렬
 
 		// function: get favorite list response 처리 함수
 		const getFavoriteListResponse = (responseBody: GetFavoriteListResponseDto | ResponseDto | null) => {

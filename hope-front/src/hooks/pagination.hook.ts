@@ -6,15 +6,19 @@ interface SortableByDate {
     writeDatetime: string;
 }
 
+// Define the possible sort orders
+type SortOrder = 'asc' | 'desc';
+
 // 제네릭 T는 SortableByDate 인터페이스를 확장해야 함을 명시적으로 표시 (타입 안정성 증가)
-const usePagination = <T extends SortableByDate>(itemsPerPage: number, pagesPerSection: number = 10) => {
+const usePagination = <T extends SortableByDate>(
+    itemsPerPage: number,
+    pagesPerSection: number = 10,
+    sortOrder: SortOrder = 'desc' // <-- Add sortOrder parameter, default to 'desc' (newest first)
+) => {
     const [totalList, setTotalListState] = useState<T[]>([]); // 외부에서 받은 원본 전체 목록 상태
-
     const [viewList, setViewList] = useState<T[]>([]); // 현재 페이지에 보여줄 객체 리스트 상태
-
     const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지 번호 상태
     const [totalPage, setTotalPage] = useState<number>(1); // 전체 페이지 수 상태
-
     const [currentSection, setCurrentSection] = useState<number>(1); // 현재 섹션 상태
     const [totalSection, setTotalSection] = useState<number>(1); // 전체 섹션 상태
     const [viewPageList, setViewPageList] = useState<number[]>([]); // 현재 섹션에 보여줄 페이지 번호 리스트 상태
@@ -38,12 +42,19 @@ const usePagination = <T extends SortableByDate>(itemsPerPage: number, pagesPerS
                  if (isNaN(dateB.getTime())) return -1; // b만 유효하지 않으면 a 뒤로 보냄
             }
 
-            // 오름차순 정렬: dateA - dateB (작은 값이 앞으로)
-            return dateA.getTime() - dateB.getTime();
+            // Apply sorting based on sortOrder
+            if (sortOrder === 'asc') {
+                // 오름차순 정렬: dateA - dateB (작은 값이 앞으로)
+                // Ascending: oldest first (dateA - dateB)
+                return dateA.getTime() - dateB.getTime();
+            } else {
+                // Descending: newest first (dateB - dateA)
+                return dateB.getTime() - dateA.getTime();
+            }
         });
 
         return listToSort; // 정렬된 목록 반환
-    }, [totalList]); // totalList가 변경될 때만 다시 실행
+    }, [totalList, sortOrder]); // totalList가 변경될 때만 다시 실행
 
     // --- 계산 함수 (useCallback으로 메모이제이션) ---
 
@@ -85,20 +96,20 @@ const usePagination = <T extends SortableByDate>(itemsPerPage: number, pagesPerS
             if (newPage !== currentPage) {
                 setCurrentPage(newPage);
             }
-        },
-        [currentPage, totalPage] // 현재 페이지와 전체 페이지에 의존
-    );
+        }, [currentPage, totalPage]);
 
     // 다음 페이지로 이동
     const nextPage = useCallback(() => {
-        if (currentPage === totalPage) return;
-        goToPage(currentPage + 1);
+        if (currentPage < totalPage) { // Check before calling goToPage
+             goToPage(currentPage + 1);
+        }
     }, [currentPage, goToPage, totalPage]);
     
     // 이전 페이지로 이동
     const prevPage = useCallback(() => {
-        if (currentPage === 1) return;
-        goToPage(currentPage - 1);
+        if (currentPage > 1) { // Check before calling goToPage
+            goToPage(currentPage - 1);
+        }
     }, [currentPage, goToPage]);
 
     // 특정 섹션으로 이동 (섹션의 첫 페이지로 이동)
@@ -109,33 +120,31 @@ const usePagination = <T extends SortableByDate>(itemsPerPage: number, pagesPerS
             if (targetSection !== currentSection || firstPageInSection !== currentPage) { // 현재 페이지가 이미 섹션 첫 페이지인 경우 제외
                  goToPage(firstPageInSection);
             }
-        },
-        [currentSection, totalSection, pagesPerSection, goToPage, currentPage] // 의존성 추가: goToPage, currentPage
+        }, [currentSection, totalSection, pagesPerSection, goToPage, currentPage] // 의존성 추가: goToPage, currentPage
     );
-
 
     // 다음 섹션으로 이동
     const nextSection = useCallback(() => {
-        if (currentSection === totalSection) return;
-        goToSection(currentSection + 1);
+        if (currentSection < totalSection) { // Check before calling goToSection
+             goToSection(currentSection + 1);
+        }
     }, [currentSection, goToSection, totalSection]);
 
     // 이전 섹션으로 이동
     const prevSection = useCallback(() => {
-        if (currentSection === 1) return;
-        goToSection(currentSection - 1);
+        if (currentSection > 1) { // Check before calling goToSection
+            goToSection(currentSection - 1);
+        }
     }, [currentSection, goToSection]);
 
 
     // 외부에서 전체 목록을 업데이트하는 함수
-    const setTotalList = useCallback(
-        (newList: T[]) => {
+    const setTotalList = useCallback((newList: T[]) => {
             setTotalListState(newList); // 원본 전체 목록 상태 업데이트
             // 목록 변경 시 페이지와 섹션을 1로 초기화
             // 이펙트가 totalList 변경 감지 후 전체 페이지/섹션 재계산 및 현재 페이지/섹션 업데이트
             setCurrentPage(1);
-            setCurrentSection(1); // 명시적으로 섹션도 초기화
-        },[]);
+    },[]);
 
     // --- Effects ---
 

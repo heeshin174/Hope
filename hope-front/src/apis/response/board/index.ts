@@ -5,6 +5,8 @@ import DeleteBoardResponseDto from './delete-board.response.dto'
 import PostCommentResponseDto from './post-comment.response.dto'
 import GetFavoriteListResponseDto from './get-favorite-list.response.dto'
 import GetCommentListResponseDto from './get-comment-list.response.dto'
+import GetTop3BoardListResponseDto from './get-top3-board-list.response.dto'
+import GetLatestBoardListResponseDto from './get-latest-board-list.response.dto'
 import IncreaseViewCountResponseDto from './increase-view-count.response.dto'
 import PutFavoriteResponseDto from './put-favorite.response.dto'
 
@@ -16,6 +18,8 @@ export type {
 	PostCommentResponseDto,
 	GetFavoriteListResponseDto,
 	GetCommentListResponseDto,
+	GetTop3BoardListResponseDto,
+	GetLatestBoardListResponseDto,
 	PutFavoriteResponseDto,
 	IncreaseViewCountResponseDto
 }

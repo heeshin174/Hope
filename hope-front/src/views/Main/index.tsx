@@ -2,10 +2,14 @@ import Top3Item from 'components/TopItem'
 import './style.css'
 import { BoardListItem } from 'types/interface'
 import { useEffect, useState } from 'react';
-import { latestBoardListMock, topBoardListMock } from 'mocks';
 import BoardItem from 'components/BoardItem';
 import { useNavigate } from 'react-router-dom';
 import { SEARCH_PATH } from 'constant';
+import { getLatestBoardListRequest, getTop3BoardListRequest } from 'apis';
+import { GetLatestBoardListResponseDto, GetTop3BoardListResponseDto } from 'apis/response/board';
+import { ResponseDto } from 'apis/response';
+import { usePagination } from 'hooks';
+import Pagination from 'components/Pagination';
 
 export default function Main() {
 
@@ -17,10 +21,21 @@ export default function Main() {
 
 		// state: 주간 top3 게시물 리스트
 		const [top3BoardList, setTop3BoardList] = useState<BoardListItem[]>([]);
+	
+		// function
+		const getTop3BoardListResponse = (responseBody: GetTop3BoardListResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+
+			const { top3List } = responseBody as GetTop3BoardListResponseDto;
+			setTop3BoardList(top3List);
+		}
 
 		// effect: 컴포넌트 마운트 시 주간 top3 게시물 리스트 가져오기
 		useEffect(() => { 
-			setTop3BoardList(topBoardListMock);
+			getTop3BoardListRequest().then(getTop3BoardListResponse);
 		}, []);
 
 		return (
@@ -44,8 +59,37 @@ export default function Main() {
 	const MainBottom = () => {
 
 		// state: 최신 게시물 리스트
-		const [currentBoardList, setCurrentBoardList] = useState<BoardListItem[]>([]);
 		const [popularWordList, setPopularWordList] = useState<string[]>([]);
+		const {
+			viewList,
+			currentPage,
+			totalPage, 
+			currentSection,
+			totalSection, 
+			viewPageList,
+			setTotalList,
+			// 훅에서 반환하는 네비게이션 함수들
+			goToPage,
+			nextPage,
+			prevPage,
+			goToSection,
+			nextSection,
+			prevSection,
+		} = usePagination<BoardListItem>(5, 5, 'desc'); // itemsPerPage=5, pagesPerSection=5
+
+		// function
+		const getLatestBoardListResponse = (responseBody: GetLatestBoardListResponseDto | ResponseDto | null) => {
+			if (!responseBody) return;
+			const { code } = responseBody;
+			if (code === 'DBE') alert('데이터베이스 오류입니다.');
+			if (code !== 'SU') return;
+			
+			const { latestList } = responseBody as GetLatestBoardListResponseDto;
+			setTotalList(latestList);
+		}
+		const getPopularWordListResponse = (responseBody: GetLatestBoardListResponseDto | ResponseDto | null) => {
+			
+		}
 
 		// event handler: 인기 검색어 클릭 시 해당 검색어로 게시물 검색하기
 		const onPopularWordClickHandler = (word: string) => {
@@ -54,7 +98,7 @@ export default function Main() {
 
 		// effect: 컴포넌트 마운트 시 주간 top3 게시물 리스트 가져오기
 		useEffect(() => { 
-			setCurrentBoardList(latestBoardListMock);
+			getLatestBoardListRequest().then(getLatestBoardListResponse);
 			setPopularWordList(['자바스크립트', '리액트', '타입스크립트', '프론트엔드', '백엔드']);
 		}, []);
 
@@ -64,7 +108,7 @@ export default function Main() {
 					<div className="main-bottom-title">{'최신 게시물'}</div>
 					<div className="main-bottom-contents-box">
 						<div className="main-bottom-current-contents">
-							{currentBoardList.map((boardListItem, index) => <BoardItem key={index} boardListItem={boardListItem} />)}
+							{viewList.map((boardListItem, index) => <BoardItem key={index} boardListItem={boardListItem} />)}
 						</div>
 						<div className="main-bottom-popular-box">
 							<div className="main-bottom-popular-card">
@@ -80,7 +124,19 @@ export default function Main() {
 						</div>
 					</div>
 					<div className="main-bottom-pagination-box">
-
+						<Pagination
+							currentPage={currentPage}
+							totalPage={totalPage}
+							currentSection={currentSection}
+							totalSection={totalSection}
+							viewPageList={viewPageList}
+							goToPage={goToPage}
+							nextPage={nextPage}
+							prevPage={prevPage}
+							goToSection={goToSection}
+							nextSection={nextSection}
+							prevSection={prevSection}
+						/>
 					</div>
 				</div>
 			</div>

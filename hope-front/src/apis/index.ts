@@ -4,7 +4,8 @@ import { SignInResponseDto, SignUpResponseDto } from './response/auth';
 import { ResponseDto } from './response';
 import { GetSignInUserResponseDto } from './response/user';
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './request/board';
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto } from './response/board';
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto } from './response/board';
+import { GetPopularListResponseDto } from './response/search';
 
 // --- 기본 설정 ---
 const DOMAIN = 'http://localhost:8080';
@@ -89,11 +90,14 @@ const GET_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${b
 const POST_BOARD_URL = () => `${API_DOMAIN}/board`;
 const PATCH_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const DELETE_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
+const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
+const GET_TOP_3_BOARD_LIST_URL = () => `${API_DOMAIN}/board/top-3`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
 const GET_COMMENT_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment-list`;
 const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite`;
+const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
 const FILE_UPLOAD_URL = () => `${FILE_DOMAIN}/upload`;
 
 // API 요청 함수들 
@@ -121,6 +125,12 @@ export const patchBoardRequest = (boardNumber: number | string, requestBody: Pat
 export const deleteBoardRequest = (boardNumber: number | string, accessToken: string) =>
     apiRequester<DeleteBoardResponseDto>('delete', DELETE_BOARD_URL(boardNumber), undefined, accessToken);
 
+export const getLatestBoardListRequest = () => 
+    apiRequester<GetLatestBoardListResponseDto>('get', GET_LATEST_BOARD_LIST_URL());
+
+export const getTop3BoardListRequest = () => 
+     apiRequester<GetTop3BoardListResponseDto>('get', GET_TOP_3_BOARD_LIST_URL());
+
 // Comment & Favorite & View Count
 export const postCommentRequest = (boardNumber: number | string, requestBody: PostCommentRequestDto, accessToken: string) =>
     apiRequester<PostCommentResponseDto>('post', POST_COMMENT_URL(boardNumber), requestBody, accessToken);
@@ -136,6 +146,10 @@ export const getCommentListRequest = (boardNumber: number | string) =>
 
 export const putFavoriteRequest = (boardNumber: number | string, accessToken: string) =>
     apiRequester<PutFavoriteResponseDto>('put', PUT_FAVORITE_URL(boardNumber), {}, accessToken); // PUT 요청 시 빈 객체 {} 전달
+
+// search
+export const getPopularListReqeust = () => 
+    apiRequester<GetPopularListResponseDto>('get', GET_POPULAR_LIST_URL());
 
 // File
 const multipartFormDataConfig: AxiosRequestConfig = { headers: { 'Content-Type': 'multipart/form-data' } };
