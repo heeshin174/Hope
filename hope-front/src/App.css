@@ -103,6 +103,25 @@
 .icon-box-small {
     width: 20px;
     height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.icon-box {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+.icon-box-large {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 .icon-button {
     width: 24px;
@@ -117,13 +136,7 @@
 .icon-button:hover {
     background-color: rgba(0, 0, 0, 0.05);
 }
-.icon-box {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-}
+
 
 .icon {
     width: 100%;
@@ -216,4 +229,8 @@
 }
 .comment-icon {
     background-image: url(assets/images/chat-light.png);
+}
+
+.edit-light-icon {
+    background-image: url(assets/images/edit-light.png);
 }
