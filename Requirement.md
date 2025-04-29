@@ -916,6 +916,7 @@ Http Status: 500 (Internal Server Error)
   "code": "DBE",
   "message": "Database error"
 }
+```
 
 ### User
 
@@ -957,6 +958,154 @@ Http Status: 401 (Unauthorized)
 ```
 
 2. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```
+
+#### 닉네임 수정
+
+`PATCH /api/v1/user/nickname`
+
+**Header**
+
+```
+name         | value
+---            ---
+Authrization | Bearer Token 
+```
+
+**Request**
+
+```
+{
+  "nickname": "newNickname"
+}
+```
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success"
+}
+```
+
+Fail
+
+1. 유효성 검사 실패
+
+```
+Http Status: 400 (Bad Request)
+{
+  "code": "VF",
+  "message": "Validation failed"
+}
+```
+
+2. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+3. 중복되는 닉네임
+
+```
+Http Status: 400 (Bad Request)
+{
+  "code": "DN",
+  "message": "Duplicate nickname"
+}
+```
+
+4. 인증 실패
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "AF",
+  "message": "Authorization Failed"
+}
+```
+
+5. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```
+
+#### 프로필 이미지 수정
+
+`PATCH /api/v1/user/profile-image`
+
+**Header**
+
+```
+name         | value
+---            ---
+Authrization | Bearer Token 
+```
+
+**Request**
+
+```
+{
+  "profileImage": "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+}
+```
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success"
+}
+```
+
+Fail
+
+1. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+2. 인증 실패
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "AF",
+  "message": "Authorization Failed"
+}
+```
+
+3. 데이터베이스 오류
 
 ```
 Http Status: 500 (Internal Server Error)

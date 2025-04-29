@@ -1,6 +1,10 @@
 package com.heeshin.hope.service.implement;
 
+import com.heeshin.hope.dto.request.user.PatchNicknameRequestDto;
+import com.heeshin.hope.dto.request.user.PatchProfileImageRequestDto;
 import com.heeshin.hope.dto.response.user.GetUserResponseDto;
+import com.heeshin.hope.dto.response.user.PatchNicknameResponseDto;
+import com.heeshin.hope.dto.response.user.PatchProfileImageResponseDto;
 import com.heeshin.hope.entity.UserEntity;
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.response.user.GetSignInUserResponseDto;
@@ -39,6 +43,37 @@ public class UserServiceImpl implements UserService {
             return GetUserResponseDto.success(userEntity);
         } catch (Exception e) {
             LOGGER.error("Error fetching user", e);
+            return ResponseDto.databaseError();
+        }
+    }
+
+    @Override
+    public ResponseEntity<? super PatchNicknameResponseDto> patchNickname(PatchNicknameRequestDto dto, String email) {
+        try {
+            UserEntity userEntity = userRepository.findByEmail(email);
+            if (userEntity == null) return PatchNicknameResponseDto.noExistUser();
+            String nickname = dto.getNickname();
+            boolean existedNickname = userRepository.existsByNickname(nickname);
+            if (existedNickname) return PatchNicknameResponseDto.duplicateNickname();
+            userEntity.setNickname(nickname);
+            userRepository.save(userEntity);
+            return PatchNicknameResponseDto.success();
+        } catch (Exception e) {
+            LOGGER.error("Error patching nickname", e);
+            return ResponseDto.databaseError();
+        }
+    }
+
+    @Override
+    public ResponseEntity<? super PatchProfileImageResponseDto> patchProfileImage(PatchProfileImageRequestDto dto, String email) {
+        try {
+            UserEntity userEntity = userRepository.findByEmail(email);
+            if (userEntity == null) return PatchProfileImageResponseDto.noExistUser();
+            userEntity.setProfileImage(dto.getProfileImage());
+            userRepository.save(userEntity);
+            return PatchProfileImageResponseDto.success();
+        } catch (Exception e) {
+            LOGGER.error("Error patching profile image", e);
             return ResponseDto.databaseError();
         }
     }
