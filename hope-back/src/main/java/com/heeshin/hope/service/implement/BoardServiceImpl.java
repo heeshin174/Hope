@@ -61,6 +61,9 @@ public class BoardServiceImpl implements BoardService {
             // 이미지를 하나씩 저장해도 되지만 DB 연결이 너무 많아져서 한 번에 처리하는 게 좋음
             imageRepository.saveAll(imageEntities);
 
+            // Elasticsearch 인덱싱
+            // boardSearchService.indexBoard(boardEntity);
+
         } catch (Exception e){
             e.printStackTrace();
             return ResponseDto.databaseError();

@@ -7,6 +7,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 100MB
+# spring.elasticsearch.uris=http://localhost:9200
+# spring.elasticsearch.username=elastic
+# spring.elasticsearch.password=your_password_if_set
 #  sql: # data.sql initialization
 #    init:
 #      mode: always
