@@ -1,7 +1,7 @@
 package com.heeshin.hope.controller;
 
-import com.heeshin.hope.dto.response.saerch.GetPopularListResponseDto;
-import com.heeshin.hope.dto.response.saerch.GetRelationListResponseDto;
+import com.heeshin.hope.dto.response.search.GetPopularListResponseDto;
+import com.heeshin.hope.dto.response.search.GetRelationListResponseDto;
 import com.heeshin.hope.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

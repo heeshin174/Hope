@@ -1,7 +1,7 @@
 package com.heeshin.hope.service;
 
-import com.heeshin.hope.dto.response.saerch.GetPopularListResponseDto;
-import com.heeshin.hope.dto.response.saerch.GetRelationListResponseDto;
+import com.heeshin.hope.dto.response.search.GetPopularListResponseDto;
+import com.heeshin.hope.dto.response.search.GetRelationListResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface SearchService {

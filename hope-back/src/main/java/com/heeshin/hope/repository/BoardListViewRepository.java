@@ -13,6 +13,7 @@ public interface BoardListViewRepository extends JpaRepository<BoardListViewEnti
     // Top3는 최신 3개를 가져오는 메서드. LIMIT 3
     List<BoardListViewEntity> findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(String writeDatetime);
     List<BoardListViewEntity> findByTitleContainsOrContentContainsOrderByWriteDatetimeDesc(String title, String content);
+    List<BoardListViewEntity> findByWriterEmailOrderByWriteDatetimeDesc(String email);
 }
 
 /*

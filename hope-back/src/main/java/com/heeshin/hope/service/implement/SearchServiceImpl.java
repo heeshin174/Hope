@@ -1,8 +1,8 @@
 package com.heeshin.hope.service.implement;
 
 import com.heeshin.hope.dto.ResponseDto;
-import com.heeshin.hope.dto.response.saerch.GetPopularListResponseDto;
-import com.heeshin.hope.dto.response.saerch.GetRelationListResponseDto;
+import com.heeshin.hope.dto.response.search.GetPopularListResponseDto;
+import com.heeshin.hope.dto.response.search.GetRelationListResponseDto;
 import com.heeshin.hope.repository.SearchLogRepository;
 import com.heeshin.hope.repository.resultSet.GetPopularListResultSet;
 import com.heeshin.hope.repository.resultSet.GetRelationListResultSet;
@@ -41,7 +41,7 @@ public class SearchServiceImpl implements SearchService {
             List<GetRelationListResultSet> resultSets = searchLogRepository.getRelationList(searchWord);
             return GetRelationListResponseDto.success(resultSets);
         } catch (Exception e) {
-            LOGGER.error("Error fetching popular search list", e);
+            LOGGER.error("Error fetching relative search list", e);
             return ResponseDto.databaseError();
         }
     }

@@ -4,6 +4,7 @@ import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
 import com.heeshin.hope.dto.response.board.*;
+import com.heeshin.hope.dto.response.user.GetUserBoardListResponseDto;
 import com.heeshin.hope.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,50 +21,42 @@ public class BoardController {
 
     @GetMapping("/{boardNumber}")
     public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Long boardNumber) {
-        ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardNumber);
-        return response;
+        return boardService.getBoard(boardNumber);
     }
 
     @GetMapping("/{boardNumber}/favorite-list")
     public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(@PathVariable("boardNumber") Long boardNumber) {
-        ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardNumber);
-        return response;
+        return boardService.getFavoriteList(boardNumber);
     }
 
     @GetMapping("/{boardNumber}/comment-list")
     public ResponseEntity<? super GetCommentListResponseDto> getCommentList(@PathVariable("boardNumber") Long boardNumber) {
-        ResponseEntity<? super GetCommentListResponseDto> response = boardService.getCommentList(boardNumber);
-        return response;
+        return boardService.getCommentList(boardNumber);
     }
 
     @PostMapping
     public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody, @AuthenticationPrincipal String email) {
-        ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
-        return response;
+        return boardService.postBoard(requestBody, email);
     }
 
     @PostMapping("/{boardNumber}/comment")
     public ResponseEntity<? super PostCommentResponseDto> postComment(@RequestBody @Valid PostCommentRequestDto requestBody, @PathVariable("boardNumber") Long boardNumber, @AuthenticationPrincipal String email) {
-        ResponseEntity<? super PostCommentResponseDto> response = boardService.postComment(requestBody, boardNumber, email);
-        return response;
+        return boardService.postComment(requestBody, boardNumber, email);
     }
 
     @PutMapping("/{boardNumber}/favorite")
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Long boardNumber, @AuthenticationPrincipal String email) {
-        ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, email);
-        return response;
+        return boardService.putFavorite(boardNumber, email);
     }
 
     @PatchMapping("/{boardNumber}")
     public ResponseEntity<? super PatchBoardResponseDto> patchBoard(@RequestBody @Valid PatchBoardRequestDto requestBody, @PathVariable("boardNumber") Long boardNumber, @AuthenticationPrincipal String email) {
-        ResponseEntity<? super PatchBoardResponseDto> response = boardService.patchBoard(requestBody, boardNumber, email);
-        return response;
+        return boardService.patchBoard(requestBody, boardNumber, email);
     }
 
     @GetMapping("/{boardNumber}/increase-view-count")
     public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(@PathVariable("boardNumber") Long boardNumber) {
-        ResponseEntity<? super IncreaseViewCountResponseDto> response = boardService.increaseViewCount(boardNumber);
-        return response;
+        return boardService.increaseViewCount(boardNumber);
     }
 
     @GetMapping("/latest-list")
@@ -83,6 +76,12 @@ public class BoardController {
             @PathVariable("searchWord") String searchWord,
             @PathVariable(value = "preSearchWord", required = false) String preSearchWord) {
         return boardService.getSearchBoardList(searchWord, preSearchWord);
+    }
+
+    @GetMapping("/user-board-list/{email}")
+    public ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(@PathVariable("email") String email) {
+
+        return boardService.getUserBoardList(email);
     }
 
     @DeleteMapping("/{boardNumber}")

@@ -3,6 +3,7 @@ package com.heeshin.hope.service.implement;
 import com.heeshin.hope.dto.request.board.PatchBoardRequestDto;
 import com.heeshin.hope.dto.request.board.PostCommentRequestDto;
 import com.heeshin.hope.dto.response.board.*;
+import com.heeshin.hope.dto.response.user.GetUserBoardListResponseDto;
 import com.heeshin.hope.entity.*;
 import com.heeshin.hope.dto.ResponseDto;
 import com.heeshin.hope.dto.request.board.PostBoardRequestDto;
@@ -60,9 +61,6 @@ public class BoardServiceImpl implements BoardService {
             }
             // 이미지를 하나씩 저장해도 되지만 DB 연결이 너무 많아져서 한 번에 처리하는 게 좋음
             imageRepository.saveAll(imageEntities);
-
-            // Elasticsearch 인덱싱
-            // boardSearchService.indexBoard(boardEntity);
 
         } catch (Exception e){
             e.printStackTrace();
@@ -190,6 +188,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public ResponseEntity<? super GetUserBoardListResponseDto> getUserBoardList(String email) {
+        try {
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return GetUserBoardListResponseDto.noExistUser();
+            List<BoardListViewEntity> boardListViewEntities = boardListViewRepository.findByWriterEmailOrderByWriteDatetimeDesc(email);
+            return GetUserBoardListResponseDto.success(boardListViewEntities);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+    }
+    
+    @Override
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Long boardNumber, String email) {
 
         try {
@@ -292,6 +303,4 @@ public class BoardServiceImpl implements BoardService {
         }
         return DeleteBoardResponseDto.success();
     }
-
-
 }

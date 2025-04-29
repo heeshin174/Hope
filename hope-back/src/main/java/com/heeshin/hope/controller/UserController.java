@@ -1,12 +1,14 @@
 package com.heeshin.hope.controller;
 
 import com.heeshin.hope.dto.response.user.GetSignInUserResponseDto;
+import com.heeshin.hope.dto.response.user.GetUserResponseDto;
 import com.heeshin.hope.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +27,11 @@ public class UserController {
     * */
     @GetMapping
     public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(@AuthenticationPrincipal String email) {
-        ResponseEntity<? super GetSignInUserResponseDto> response = userService.getSignInUser(email);
-        return response;
+        return userService.getSignInUser(email);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<? super GetUserResponseDto> getUser(@PathVariable("email") String email) {
+        return userService.getUser(email);
     }
 }

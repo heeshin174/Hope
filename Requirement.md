@@ -472,6 +472,62 @@ Http Status: 500 (Internal Server Error)
 }
 ```
 
+#### 특정 유저 게시물 리스트
+
+`GET /api/v1/board/user-board-list/{email}`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+{
+  "code": "SU",
+  "message": "Success",
+  "userBoardList": [
+    {
+      "boardNumber": 1,
+      "title": "제목입니다.",
+      "content": "제 첫 게시물입니다. 많이 부족합니다. \n",
+      "boardImageList": [
+          "http://localhost:8080/file/d95ee6f4-5eda-4961-be86-0279493815cb.jpg"
+      ],
+      "writeDatetime": null,
+      "writerEmail": "email@email.com",
+      "writerNickname": "nickname3213",
+      "writerProfileImage": null
+    }
+  ]
+}
+
+```
+
+Fail
+
+1. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+2. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```
+
 ### Favorite
 
 #### 좋아요 기능
@@ -860,3 +916,52 @@ Http Status: 500 (Internal Server Error)
   "code": "DBE",
   "message": "Database error"
 }
+
+### User
+
+#### 유저 정보
+
+`GET /api/v1/user/{email}`
+
+**Header**
+
+**Request**
+
+**Response**
+
+Success
+
+```
+Http Status: 200
+{
+  "code": "SU",
+  "message": "Success",
+  "user": {
+    "email": "email@email.com",
+    "nickname": "nickname",
+    "profileImage": null
+  }
+}
+```
+
+Fail
+
+1. 존재하지 않는 유저
+
+```
+Http Status: 401 (Unauthorized)
+{
+  "code": "NU",
+  "message": "This user does not exist."
+}
+```
+
+2. 데이터베이스 오류
+
+```
+Http Status: 500 (Internal Server Error)
+{
+  "code": "DBE",
+  "message": "Database error"
+}
+```

@@ -1,4 +1,4 @@
-package com.heeshin.hope.dto.response.saerch;
+package com.heeshin.hope.dto.response.search;
 
 import com.heeshin.hope.common.ResponseCode;
 import com.heeshin.hope.common.ResponseMessage;
