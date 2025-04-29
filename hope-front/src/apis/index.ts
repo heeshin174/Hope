@@ -2,10 +2,11 @@ import axios, { AxiosError, AxiosRequestConfig, Method } from 'axios';
 import { SignInRequestDto, SignUpRequestDto } from './request/auth';
 import { SignInResponseDto, SignUpResponseDto } from './response/auth';
 import { ResponseDto } from './response';
-import { GetSignInUserResponseDto } from './response/user';
+import { GetSignInUserResponseDto, GetUserResponseDto, PatchNicknameResponseDto, PatchProfileImageResponseDto } from './response/user';
 import { PatchBoardRequestDto, PostBoardRequestDto, PostCommentRequestDto } from './request/board';
-import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto } from './response/board';
+import { PostBoardResponseDto, GetBoardResponseDto, IncreaseViewCountResponseDto, GetFavoriteListResponseDto, GetCommentListResponseDto, PutFavoriteResponseDto, PostCommentResponseDto, DeleteBoardResponseDto, PatchBoardResponseDto, GetLatestBoardListResponseDto, GetTop3BoardListResponseDto, GetSearchBoardListResponseDto, GetUserBoardListResponseDto } from './response/board';
 import { GetPopularListResponseDto, GetRelationListResponseDto } from './response/search';
+import { PatchNicknameRequestDto, PatchProfileImageRequestDto } from './request/user';
 
 // --- 기본 설정 ---
 const DOMAIN = 'http://localhost:8080';
@@ -92,6 +93,7 @@ const PATCH_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/$
 const DELETE_BOARD_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}`;
 const GET_LATEST_BOARD_LIST_URL = () => `${API_DOMAIN}/board/latest-list`;
 const GET_TOP_3_BOARD_LIST_URL = () => `${API_DOMAIN}/board/top-3`;
+const GET_USER_BOARD_LIST_URL = (email: string) => `${API_DOMAIN}/board/user-board-list/${email}`;
 const POST_COMMENT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/comment`;
 const INCREASE_VIEW_COUNT_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/increase-view-count`;
 const GET_FAVORITE_LIST_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/${boardNumber}/favorite-list`;
@@ -100,6 +102,9 @@ const PUT_FAVORITE_URL = (boardNumber: number | string) => `${API_DOMAIN}/board/
 const GET_POPULAR_LIST_URL = () => `${API_DOMAIN}/search/popular-list`;
 const GET_SEARCH_BOARD_LIST_URL = (searchWord: string, preSearchWord: string | null) => `${API_DOMAIN}/board/search-list/${searchWord}${preSearchWord ? '/' + preSearchWord : ''}`;
 const GET_RELATION_LIST_URL = (searchWord: string) => `${API_DOMAIN}/search/${searchWord}/relation-list`;
+const GET_USER_URL = (email: string) => `${API_DOMAIN}/user/${email}`;
+const PATCH_NICKNAME_URL = () => `${API_DOMAIN}/user/nickname`;
+const PATCH_PROFILE_IMAGE_URL = () => `${API_DOMAIN}/user/profile-image`;
 const FILE_UPLOAD_URL = () => `${FILE_DOMAIN}/upload`;
 
 // API 요청 함수들 
@@ -139,10 +144,12 @@ export const getSearchBoardListRequest = (searchWord: string, preSearchWord: str
 export const getRelationListRequest = (searchWord: string) =>
     apiRequester<GetRelationListResponseDto>('get', GET_RELATION_LIST_URL(searchWord));
 
+export const getUserBoardListRequest = (email: string) =>
+    apiRequester<GetUserBoardListResponseDto>('get', GET_USER_BOARD_LIST_URL(email));
+
 // Comment & Favorite & View Count
 export const postCommentRequest = (boardNumber: number | string, requestBody: PostCommentRequestDto, accessToken: string) =>
     apiRequester<PostCommentResponseDto>('post', POST_COMMENT_URL(boardNumber), requestBody, accessToken);
-
 export const increaseViewCountRequest = (boardNumber: number | string) =>
     apiRequester<IncreaseViewCountResponseDto>('get', INCREASE_VIEW_COUNT_URL(boardNumber));
 
@@ -158,6 +165,16 @@ export const putFavoriteRequest = (boardNumber: number | string, accessToken: st
 // search
 export const getPopularListRequest = () => 
     apiRequester<GetPopularListResponseDto>('get', GET_POPULAR_LIST_URL());
+
+// User
+export const getUserRequest = (email: string) =>
+    apiRequester<GetUserResponseDto>('get', GET_USER_URL(email));
+
+export const patchNicknameRequest = (requestBody: PatchNicknameRequestDto, accessToken: string) =>
+    apiRequester<PatchNicknameResponseDto>('patch', PATCH_NICKNAME_URL(), requestBody, accessToken);
+
+export const patchProfileImageRequest = (requestBody: PatchProfileImageRequestDto, accessToken: string) =>
+    apiRequester<PatchProfileImageResponseDto>('patch', PATCH_PROFILE_IMAGE_URL(), requestBody, accessToken);
 
 // File
 const multipartFormDataConfig: AxiosRequestConfig = { headers: { 'Content-Type': 'multipart/form-data' } };
